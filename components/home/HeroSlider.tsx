@@ -66,8 +66,14 @@ export default function HeroSlider() {
     return () => clearInterval(interval);
   }, []);
 
+  // Calculate dynamic padding based on screen size and header
+  const getResponsivePadding = () => {
+    // Account for fixed header with floating design
+    return "pt-20 sm:pt-24 md:pt-28 lg:pt-32 xl:pt-36";
+  };
+
   return (
-    <section className="relative h-[100vh] min-h-[700px] overflow-hidden pt-20">
+    <section className={`relative h-screen min-h-[600px] sm:min-h-[700px] md:min-h-[800px] lg:min-h-[900px] overflow-hidden ${getResponsivePadding()}`}>
       {heroSlides.map((slide, index) => (
         <motion.div
           key={slide.id}
@@ -83,9 +89,9 @@ export default function HeroSlider() {
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(255,255,255,0.1),transparent_50%)]"></div>
           
-          <div className="relative h-full flex items-center">
-            <div className="container mx-auto px-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="relative h-full flex items-center justify-center py-8 sm:py-12 md:py-16">
+            <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
                 {/* Content Side */}
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
@@ -94,9 +100,9 @@ export default function HeroSlider() {
                     x: currentSlide === index ? 0 : -50
                   }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-white space-y-8"
+                  className="text-white space-y-4 sm:space-y-6 md:space-y-8 order-2 lg:order-1 text-center lg:text-left"
                 >
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4 md:space-y-6">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ 
@@ -104,35 +110,35 @@ export default function HeroSlider() {
                         y: currentSlide === index ? 0 : 20
                       }}
                       transition={{ duration: 0.6, delay: 0.4 }}
-                      className="flex items-center justify-between"
+                      className="flex items-center justify-between flex-wrap gap-2"
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-0.5 bg-white/60"></div>
-                        <span className="text-white/80 text-sm tracking-widest uppercase font-medium">
+                      <div className="flex items-center space-x-2 md:space-x-3">
+                        <div className="w-8 md:w-12 h-0.5 bg-white/60"></div>
+                        <span className="text-white/80 text-xs md:text-sm tracking-widest uppercase font-medium">
                           {slide.subtitle}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                      <div className="flex items-center space-x-2 md:space-x-4">
+                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs md:text-sm">
                           {slide.badge}
                         </Badge>
                         <div className="flex items-center space-x-1">
-                          <FiStar className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="text-white/80 text-sm">{slide.rating}</span>
+                          <FiStar className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-current" />
+                          <span className="text-white/80 text-xs md:text-sm">{slide.rating}</span>
                         </div>
                       </div>
                     </motion.div>
                     
-                    <h1 className="text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight tracking-tight">
                       {slide.title}
                     </h1>
                     
-                    <p className="text-xl text-white/90 leading-relaxed max-w-lg">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 leading-relaxed max-w-lg mx-auto lg:mx-0">
                       {slide.description}
                     </p>
 
                     {/* Feature Pills */}
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3 justify-center lg:justify-start">
                       {slide.features.map((feature, i) => (
                         <motion.div
                           key={feature}
@@ -142,7 +148,7 @@ export default function HeroSlider() {
                             scale: currentSlide === index ? 1 : 0.8
                           }}
                           transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
-                          className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-white/90 border border-white/20"
+                          className="bg-white/10 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm text-white/90 border border-white/20"
                         >
                           {feature}
                         </motion.div>
@@ -151,7 +157,7 @@ export default function HeroSlider() {
                   </div>
 
                   {/* Enhanced Performance Stats */}
-                  <div className="grid grid-cols-3 gap-6 py-6">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-6 py-4 sm:py-6 md:py-8">
                     {Object.entries(slide.stats).map(([key, value], i) => (
                       <motion.div 
                         key={key} 
@@ -164,9 +170,9 @@ export default function HeroSlider() {
                         transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 group-hover:border-white/40 transition-colors">
-                          <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                          <div className="text-sm text-white/70 capitalize flex items-center justify-center space-x-1">
+                        <div className="bg-white/10 backdrop-blur-sm rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 border border-white/20 group-hover:border-white/40 transition-colors">
+                          <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white mb-1">{value}</div>
+                          <div className="text-xs sm:text-xs md:text-sm text-white/70 capitalize flex items-center justify-center space-x-1">
                             {key === 'devices' && <FiCpu className="w-3 h-3" />}
                             {key === 'sync' && <BsLightning className="w-3 h-3" />}
                             {key === 'ecosystem' && <BsTrophy className="w-3 h-3" />}
@@ -192,41 +198,43 @@ export default function HeroSlider() {
                     x: currentSlide === index ? 0 : 50
                   }}
                   transition={{ duration: 0.8, delay: 0.3 }}
-                  className="flex justify-center items-center relative"
+                  className="flex justify-center items-center relative order-1 lg:order-2"
                 >
                   <div className="relative">
                     {/* Enhanced floating background elements */}
-                    <div className="absolute -inset-32 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
-                    <div className="absolute -inset-20 bg-white/5 rounded-full blur-2xl"></div>
-                    <div className="absolute -inset-10 bg-white/10 rounded-full blur-xl"></div>
+                    <div className="absolute -inset-8 sm:-inset-12 md:-inset-16 lg:-inset-20 xl:-inset-24 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-2xl sm:blur-3xl"></div>
+                    <div className="absolute -inset-6 sm:-inset-8 md:-inset-12 lg:-inset-16 bg-white/5 rounded-full blur-xl sm:blur-2xl"></div>
+                    <div className="absolute -inset-3 sm:-inset-4 md:-inset-6 lg:-inset-8 bg-white/10 rounded-full blur-lg sm:blur-xl"></div>
                     
-                    {/* Main Product Container */}
-                    <div className="relative bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                      {/* Product Image */}
-                      <motion.div 
-                        className="relative z-10 flex items-center justify-center h-96 w-96"
-                        animate={{ 
-                          rotateY: currentSlide === index ? [0, 2, 0] : 0,
-                          scale: currentSlide === index ? [1, 1.02, 1] : 1
-                        }}
-                        transition={{ 
-                          duration: 4, 
-                          repeat: Infinity, 
-                          ease: "easeInOut" 
-                        }}
-                      >
-                        <Image
-                          src={slide.image}
-                          alt={slide.title}
-                          fill
-                          className="object-contain drop-shadow-2xl"
-                          priority={index === 0}
-                        />
-                      </motion.div>
+                    {/* Main Product Container with Flex Layout */}
+                    <div className="relative bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl md:rounded-3xl p-2 sm:p-3 md:p-4 border border-white/10 flex flex-col justify-between h-[280px] w-[220px] sm:h-[320px] sm:w-[260px] md:h-[380px] md:w-[320px] lg:h-[420px] lg:w-[350px]">
+                      {/* Product Image Container */}
+                      <div className="flex-1 flex items-center justify-center">
+                        <motion.div 
+                          className="relative h-36 w-36 sm:h-44 sm:w-44 md:h-56 md:w-56 lg:h-64 lg:w-64"
+                          animate={{ 
+                            rotateY: currentSlide === index ? [0, 2, 0] : 0,
+                            scale: currentSlide === index ? [1, 1.02, 1] : 1
+                          }}
+                          transition={{ 
+                            duration: 4, 
+                            repeat: Infinity, 
+                            ease: "easeInOut" 
+                          }}
+                        >
+                          <Image
+                            src={slide.image}
+                            alt={slide.title}
+                            fill
+                            className="object-contain drop-shadow-2xl"
+                            priority={index === 0}
+                          />
+                        </motion.div>
+                      </div>
 
-                      {/* Product Info Overlay */}
+                      {/* Product Info Section */}
                       <motion.div 
-                        className="absolute bottom-4 left-4 right-4 bg-white/10 backdrop-blur-md rounded-2xl p-4"
+                        className="bg-white/10 backdrop-blur-md rounded-lg md:rounded-xl p-2 md:p-3 mt-1 md:mt-2"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ 
                           opacity: currentSlide === index ? 1 : 0,
@@ -236,17 +244,17 @@ export default function HeroSlider() {
                       >
                         <div className="flex items-center justify-between text-white">
                           <div>
-                            <p className="text-sm text-white/70">Prix</p>
-                            <p className="text-lg font-bold">
+                            <p className="text-xs sm:text-sm text-white/70">Prix</p>
+                            <p className="text-sm sm:text-base md:text-lg font-bold">
                               {slide.priceRange}
                             </p>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-0">
-                              <BsHeart className="w-4 h-4" />
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-0 h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0">
+                              <BsHeart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
                             </Button>
-                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-                              <FiEye className="w-4 h-4" />
+                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0">
+                              <FiEye className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
                             </Button>
                           </div>
                         </div>
@@ -255,7 +263,7 @@ export default function HeroSlider() {
                     
                     {/* Enhanced floating specs with category-specific content */}
                     <motion.div 
-                      className="absolute -top-6 -right-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-4 text-white border border-white/20"
+                      className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 md:-top-4 md:-right-4 lg:-top-6 lg:-right-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-1.5 sm:p-2 md:p-3 lg:p-4 text-white border border-white/20 z-20"
                       animate={{ 
                         y: [-5, 5, -5],
                         opacity: currentSlide === index ? 1 : 0,
@@ -268,15 +276,15 @@ export default function HeroSlider() {
                       }}
                       initial={{ opacity: 0, scale: 0.8 }}
                     >
-                      <div className="flex items-center space-x-2">
-                        {slide.id === 1 && <><BsLightning className="w-5 h-5 text-yellow-400" /><span className="text-sm font-medium">Connecté</span></>}
-                        {slide.id === 2 && <><BsShieldCheck className="w-5 h-5 text-green-400" /><span className="text-sm font-medium">Hi-Fi</span></>}
-                        {slide.id === 3 && <><BsSpeedometer className="w-5 h-5 text-red-400" /><span className="text-sm font-medium">Ultra FPS</span></>}
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        {slide.id === 1 && <><BsLightning className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400" /><span className="text-xs sm:text-sm font-medium">Connecté</span></>}
+                        {slide.id === 2 && <><BsShieldCheck className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-400" /><span className="text-xs sm:text-sm font-medium">Hi-Fi</span></>}
+                        {slide.id === 3 && <><BsSpeedometer className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-red-400" /><span className="text-xs sm:text-sm font-medium">Ultra FPS</span></>}
                       </div>
                     </motion.div>
                     
                     <motion.div 
-                      className="absolute -bottom-6 -left-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-4 text-white border border-white/20"
+                      className="absolute -bottom-2 -left-2 sm:-bottom-3 sm:-left-3 md:-bottom-4 md:-left-4 lg:-bottom-6 lg:-left-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-1.5 sm:p-2 md:p-3 lg:p-4 text-white border border-white/20 z-20"
                       animate={{ 
                         y: [5, -5, 5],
                         opacity: currentSlide === index ? 1 : 0,
@@ -289,16 +297,16 @@ export default function HeroSlider() {
                       }}
                       initial={{ opacity: 0, scale: 0.8 }}
                     >
-                      <div className="flex items-center space-x-2">
-                        {slide.id === 1 && <><BsGift className="w-5 h-5 text-green-400" /><span className="text-sm font-medium">Bundle</span></>}
-                        {slide.id === 2 && <><BsTrophy className="w-5 h-5 text-yellow-400" /><span className="text-sm font-medium">Premium</span></>}
-                        {slide.id === 3 && <><AiOutlineRocket className="w-5 h-5 text-blue-400" /><span className="text-sm font-medium">Gaming</span></>}
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        {slide.id === 1 && <><BsGift className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-400" /><span className="text-xs sm:text-sm font-medium">Bundle</span></>}
+                        {slide.id === 2 && <><BsTrophy className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400" /><span className="text-xs sm:text-sm font-medium">Premium</span></>}
+                        {slide.id === 3 && <><AiOutlineRocket className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400" /><span className="text-xs sm:text-sm font-medium">Gaming</span></>}
                       </div>
                     </motion.div>
 
-                    {/* Additional floating elements */}
+                    {/* Additional floating elements - Hidden on smaller screens */}
                     <motion.div 
-                      className="absolute top-1/2 -left-12 bg-white/10 backdrop-blur-sm rounded-full p-3 text-white"
+                      className="hidden lg:block absolute top-1/2 -left-8 xl:-left-12 bg-white/10 backdrop-blur-sm rounded-full p-2 md:p-3 text-white z-10"
                       animate={{ 
                         x: [-3, 3, -3],
                         opacity: currentSlide === index ? 1 : 0 
@@ -309,11 +317,11 @@ export default function HeroSlider() {
                       }}
                       initial={{ opacity: 0 }}
                     >
-                      <AiOutlineThunderbolt className="w-6 h-6 text-blue-400" />
+                      <AiOutlineThunderbolt className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                     </motion.div>
 
                     <motion.div 
-                      className="absolute top-1/4 -right-12 bg-white/10 backdrop-blur-sm rounded-full p-3 text-white"
+                      className="hidden lg:block absolute top-1/4 -right-8 xl:-right-12 bg-white/10 backdrop-blur-sm rounded-full p-2 md:p-3 text-white z-10"
                       animate={{ 
                         x: [3, -3, 3],
                         opacity: currentSlide === index ? 1 : 0 
@@ -324,7 +332,7 @@ export default function HeroSlider() {
                       }}
                       initial={{ opacity: 0 }}
                     >
-                      <BsTrophy className="w-6 h-6 text-yellow-400" />
+                      <BsTrophy className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
                     </motion.div>
                   </div>
                 </motion.div>
@@ -335,15 +343,15 @@ export default function HeroSlider() {
       ))}
       
       {/* Enhanced slide controls with better visuals */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3">
         {heroSlides.map((slide, index) => (
           <motion.button
             key={index}
             onClick={() => setCurrentSlide(index)}
             className={`relative overflow-hidden transition-all duration-300 ${
               currentSlide === index 
-                ? 'w-12 h-3 bg-white' 
-                : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                ? 'w-6 sm:w-8 md:w-10 lg:w-12 h-1.5 sm:h-2 md:h-2.5 lg:h-3 bg-white' 
+                : 'w-1.5 sm:w-2 md:w-2.5 lg:w-3 h-1.5 sm:h-2 md:h-2.5 lg:h-3 bg-white/40 hover:bg-white/60'
             } rounded-full`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -361,9 +369,9 @@ export default function HeroSlider() {
         ))}
       </div>
 
-      {/* Enhanced scroll indicator with icons */}
+      {/* Enhanced scroll indicator with icons - Hidden on mobile */}
       <motion.div 
-        className="absolute bottom-8 right-8 text-white/60 cursor-pointer group"
+        className="hidden lg:flex absolute bottom-6 md:bottom-8 lg:bottom-10 right-4 md:right-6 lg:right-8 text-white/60 cursor-pointer group"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
         whileHover={{ scale: 1.1 }}
