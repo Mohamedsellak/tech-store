@@ -97,6 +97,16 @@ export function Header() {
             >
               Contact
             </Link>
+            <Link 
+              href="/faq" 
+              className={`px-5 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                pathname === "/faq" 
+                  ? "text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-md font-semibold transform scale-105" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/70 dark:hover:bg-gray-700/70"
+              }`}
+            >
+              FAQ
+            </Link>
           </motion.nav>
 
           {/* Right Actions */}
@@ -241,6 +251,17 @@ export function Header() {
             }`}
           >
             Contact
+          </Link>
+          <Link 
+            href="/faq" 
+            onClick={() => setIsMenuOpen(false)}
+            className={`block px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
+              pathname === "/faq" 
+                ? "text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-md font-semibold" 
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+          >
+            FAQ
           </Link>
         </div>
       </motion.div>

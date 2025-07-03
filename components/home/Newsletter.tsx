@@ -1,72 +1,97 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiMail, FiArrowRight } from "react-icons/fi";
+import { FiMail, FiArrowRight, FiShield, FiZap } from "react-icons/fi";
 import { BsCheck2Circle } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+
   return (
-    <section className="relative py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(59,130,246,0.3),transparent_50%)]"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)]"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+    <section className="py-12 sm:py-16 md:py-20 bg-gray-900">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-2xl sm:max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-8"
+            className="text-center mb-8 sm:mb-12"
           >
-            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-              <FiMail className="w-4 h-4 text-white" />
-              <span className="text-white/90 text-sm font-medium tracking-wider uppercase">
-                Newsletter Premium
+            <div className="inline-flex items-center space-x-2 bg-blue-600/10 px-3 sm:px-4 py-2 rounded-full mb-6">
+              <FiMail className="w-4 h-4 text-blue-400" />
+              <span className="text-blue-400 text-xs sm:text-sm font-medium uppercase tracking-wider">
+                Newsletter
               </span>
             </div>
             
-            <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">
-              Restez à la Pointe de
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                {" "}l'Innovation
-              </span>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+              Restez Informé des Dernières Innovations
             </h3>
             
-            <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
-              Recevez en exclusivité les dernières actualités tech, les lancements produits 
-              et nos offres premium réservées aux membres
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-xl sm:max-w-2xl mx-auto leading-relaxed">
+              Recevez en exclusivité nos analyses tech, nouveautés produits 
+              et offres spéciales directement dans votre boîte mail
             </p>
+          </motion.div>
 
-            <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto pt-8">
-              <div className="flex-1 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8"
+          >
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
                 <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre.email@exemple.com"
-                  className="h-14 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 rounded-2xl pl-12 text-lg"
+                  className="h-12 sm:h-14 bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl text-sm sm:text-base"
                 />
-                <FiMail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
               </div>
-              <Button className="h-14 bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 rounded-2xl text-lg">
-                S'inscrire
-                <FiArrowRight className="w-5 h-5 ml-2" />
+              
+              <Button className="h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 sm:px-8 rounded-xl transition-colors">
+                S'abonner
+                <FiArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
+            
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/10">
+              <div className="flex items-center space-x-2 text-gray-300">
+                <FiShield className="w-4 h-4 text-green-400" />
+                <span className="text-sm">Données sécurisées</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-300">
+                <FiZap className="w-4 h-4 text-blue-400" />
+                <span className="text-sm">Contenu exclusif</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-300">
+                <BsCheck2Circle className="w-4 h-4 text-purple-400" />
+                <span className="text-sm">Désabonnement facile</span>
+              </div>
+            </div>
+          </motion.div>
 
-            <div className="flex items-center justify-center space-x-8 pt-8 text-white/60 text-sm">
-              <div className="flex items-center space-x-2">
-                <BsCheck2Circle className="w-4 h-4 text-green-400" />
-                <span>Pas de spam</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <BsCheck2Circle className="w-4 h-4 text-green-400" />
-                <span>Contenu exclusif</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <BsCheck2Circle className="w-4 h-4 text-green-400" />
-                <span>Désabonnement simple</span>
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-12 mt-8 sm:mt-12 text-center"
+          >
+            <div>
+              <div className="text-xl sm:text-2xl font-bold text-white mb-1">25K+</div>
+              <div className="text-xs sm:text-sm text-gray-400">Abonnés actifs</div>
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold text-white mb-1">2x/mois</div>
+              <div className="text-xs sm:text-sm text-gray-400">Newsletters</div>
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold text-white mb-1">4.8/5</div>
+              <div className="text-xs sm:text-sm text-gray-400">Satisfaction</div>
             </div>
           </motion.div>
         </div>
