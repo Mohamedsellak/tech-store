@@ -45,6 +45,18 @@ const featuredProducts = {
       category: "Smartphones",
       inStock: false,
       isNew: false
+    },
+    {
+      id: 10,
+      name: "OnePlus 12 Pro",
+      price: 949,
+      originalPrice: 1049,
+      rating: 4.6,
+      reviews: 178,
+      image: "📱",
+      category: "Smartphones",
+      inStock: true,
+      isNew: true
     }
   ],
   laptops: [
@@ -79,6 +91,18 @@ const featuredProducts = {
       originalPrice: 1799,
       rating: 4.7,
       reviews: 143,
+      image: "💻",
+      category: "Laptops",
+      inStock: true,
+      isNew: false
+    },
+    {
+      id: 11,
+      name: "ASUS ROG Strix G17",
+      price: 1799,
+      originalPrice: 1999,
+      rating: 4.5,
+      reviews: 165,
       image: "💻",
       category: "Laptops",
       inStock: true,
@@ -121,89 +145,124 @@ const featuredProducts = {
       category: "Audio",
       inStock: true,
       isNew: false
+    },
+    {
+      id: 12,
+      name: "Sennheiser Momentum 4",
+      price: 299,
+      originalPrice: 349,
+      rating: 4.7,
+      reviews: 213,
+      image: "🎧",
+      category: "Audio",
+      inStock: true,
+      isNew: true
     }
   ]
 };
 
 export default function ProductsList() {
   return (
-    <section className="relative py-16 sm:py-24 md:py-32 px-2 sm:px-4 overflow-hidden">
-      {/* Enhanced gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-blue-50/50 dark:from-gray-900 dark:via-slate-900 dark:to-blue-900/20"></div>
+    <section className="relative py-16 sm:py-24 md:py-32 px-2 sm:px-4 md:px-6 overflow-hidden pt-0 -mt-16">
+      {/* Enhanced background with subtle gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900"></div>
       
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="hidden md:block absolute top-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-200/10 to-purple-200/10 dark:from-blue-500/5 dark:to-purple-500/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.3, 1, 1.3],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="hidden md:block absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-green-200/10 to-cyan-200/10 dark:from-green-500/5 dark:to-cyan-500/5 rounded-full blur-3xl"
-        />
-      </div>
-
+      {/* Enhanced animated floating elements with better dark theme colors */}
+      <motion.div
+        animate={{
+          rotate: [0, 360],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="hidden md:block absolute top-20 right-20 w-72 h-72 border border-blue-200/40 dark:border-blue-400/30 rounded-full shadow-sm dark:shadow-blue-400/10"
+      />
+      <motion.div
+        animate={{
+          rotate: [360, 0],
+          scale: [1.1, 1, 1.1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="hidden md:block absolute bottom-20 left-20 w-64 h-64 border border-purple-200/40 dark:border-purple-400/30 rounded-full shadow-sm dark:shadow-purple-400/10"
+      />
+      
       <div className="container mx-auto relative z-10">
         {Object.entries(featuredProducts).map(([categoryKey, products], categoryIndex) => (
-          <div key={categoryKey} className="mb-16 sm:mb-20 md:mb-24 last:mb-0">
+          <div key={categoryKey} className="mb-8 sm:mb-12 md:mb-16 last:mb-0">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-10 sm:mb-12 md:mb-16 gap-6"
+              className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 sm:mb-8 md:mb-12 gap-6"
             >
               <div className="flex-1">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600/10 to-purple-600/10 backdrop-blur-xl border border-blue-200/30 dark:border-blue-500/20 px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6"
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-cyan-500/15 dark:from-blue-400/20 dark:via-purple-400/20 dark:to-cyan-400/20 backdrop-blur-xl border border-blue-200/40 dark:border-blue-400/30 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 shadow-lg dark:shadow-blue-400/10"
                 >
                   <motion.div
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   >
-                    <FiStar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <FiStar className="w-5 h-5 text-blue-600 dark:text-blue-300" />
                   </motion.div>
-                  <span className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-semibold tracking-wider uppercase">
+                  <span className="text-blue-600 dark:text-blue-300 text-xs sm:text-sm font-semibold tracking-wider uppercase">
                     Collection Premium
                   </span>
+                  <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse shadow-sm"></div>
                 </motion.div>
                 
                 <motion.h3 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-gray-900 dark:text-white mb-3 sm:mb-4 capitalize tracking-tight"
+                  className="text-3xl sm:text-4xl lg:text-7xl font-black text-gray-900 dark:text-white mb-3 sm:mb-4 capitalize tracking-tight"
                 >
-                  {categoryKey === 'smartphones' ? 'Smartphones' : 
-                   categoryKey === 'laptops' ? 'Ordinateurs Portables' : 
-                   categoryKey === 'audio' ? 'Audio & Casques' : categoryKey}
+                  {categoryKey === 'smartphones' ? (
+                    <>
+                      Smart
+                      <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
+                        phones
+                      </span>
+                    </>
+                  ) : categoryKey === 'laptops' ? (
+                    <>
+                      Ordinateurs
+                      <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
+                        Portables
+                      </span>
+                    </>
+                  ) : categoryKey === 'audio' ? (
+                    <>
+                      Audio &
+                      <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
+                        Casques
+                      </span>
+                    </>
+                  ) : categoryKey}
                 </motion.h3>
                 
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 font-light leading-relaxed"
+                  className="text-base sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl sm:max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light"
                 >
                   Les technologies les plus avancées sélectionnées par nos experts
+                  <br className="hidden lg:block" />
+                  pour une expérience utilisateur exceptionnelle
                 </motion.p>
               </div>
               
@@ -219,7 +278,7 @@ export default function ProductsList() {
                   >
                     <Button 
                       size="lg" 
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold px-6 sm:px-8 py-4 sm:py-6 rounded-2xl text-base sm:text-lg shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 group relative overflow-hidden"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold px-6 sm:px-8 py-4 sm:py-6 rounded-2xl text-base sm:text-lg transition-all duration-300 group relative overflow-hidden"
                     >
                       <motion.div
                         animate={{
@@ -252,200 +311,133 @@ export default function ProductsList() {
               </motion.div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.15 }}
-                  whileHover={{ y: -12, scale: 1.02 }}
-                  className="group cursor-pointer"
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ 
+                    opacity: 1,
+                    x: 0
+                  }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  className="flex justify-center items-center relative group cursor-pointer"
                 >
-                  <Card className="h-full overflow-hidden hover:shadow-3xl transition-all duration-700 border-0 shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-2xl rounded-3xl relative">
-                    {/* Gradient border effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
-                    
-                    <CardHeader className="p-0 relative">
-                      <div className="relative h-48 sm:h-56 md:h-64 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center overflow-hidden rounded-t-3xl">
-                        {/* Background pattern */}
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)] group-hover:bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.2),transparent_70%)] transition-all duration-500"></div>
-                        
-                        <motion.div 
-                          className="text-6xl sm:text-7xl md:text-8xl group-hover:scale-110 transition-transform duration-500 relative z-10"
-                          animate={{
-                            rotate: [0, 5, -5, 0],
-                          }}
-                          transition={{
-                            duration: 4,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        >
-                          {product.image}
-                        </motion.div>
-                        
-                        {/* Enhanced badges */}
-                        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex flex-col space-y-2">
-                          {product.isNew && (
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ duration: 0.5, delay: 0.2 }}
-                            >
-                              <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white font-bold px-2 sm:px-3 py-1 shadow-lg text-xs">
-                                ✨ Nouveau
-                              </Badge>
-                            </motion.div>
-                          )}
-                          {!product.inStock && (
-                            <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white font-bold px-2 sm:px-3 py-1 shadow-lg text-xs">
-                              🚫 Rupture
-                            </Badge>
-                          )}
-                          {product.originalPrice > product.price && (
-                            <motion.div
-                              animate={{ scale: [1, 1.1, 1] }}
-                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                              <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold px-2 sm:px-3 py-1 shadow-lg text-xs">
-                                🔥 Promo
-                              </Badge>
-                            </motion.div>
-                          )}
-                        </div>
-                        
-                        {/* Enhanced heart button */}
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileHover={{ opacity: 1, scale: 1 }}
-                          className="absolute top-4 sm:top-6 left-4 sm:left-6"
-                        >
-                          <Button
-                            size="icon"
-                            className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/20 rounded-2xl transition-all duration-300 group-hover:opacity-100 opacity-0"
-                          >
-                            <motion.div
-                              whileHover={{ scale: 1.2 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              <FiHeart className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-200" />
-                            </motion.div>
-                          </Button>
-                        </motion.div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="p-6 sm:p-8 relative z-10">
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <Badge 
-                          variant="outline" 
-                          className="border-blue-200 text-blue-600 dark:border-blue-500 dark:text-blue-400 font-semibold px-2 sm:px-3 py-1 text-xs"
-                        >
-                          {product.category}
-                        </Badge>
-                        <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="relative">
+                    {/* Main Product Container with enhanced shadow and dark theme support */}
+                    <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl sm:rounded-2xl md:rounded-3xl p-2 sm:p-3 md:p-4 border border-gray-200/60 dark:border-gray-600/60 transition-all duration-500 flex flex-col justify-between h-[280px] w-[220px] sm:h-[320px] sm:w-[260px] md:h-[380px] md:w-[320px] lg:h-[420px] lg:w-[350px] shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 dark:hover:shadow-blue-400/20 dark:shadow-gray-900/20">
+                      
+                      {/* Enhanced badges with clean shadows */}
+                      <div className="absolute top-2 left-2 z-20 flex flex-col space-y-1">
+                        {product.isNew && (
                           <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            initial={{ scale: 0, rotate: -45 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 0.2, type: "spring" }}
+                            className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg px-2 py-1 text-white text-xs font-medium shadow-lg"
                           >
-                            <FiStar className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                            Nouveau
                           </motion.div>
-                          <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            {product.rating} ({product.reviews} avis)
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <CardTitle className="text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 font-bold">
-                        {product.name}
-                      </CardTitle>
-                      
-                      <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                        <motion.span 
-                          className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          {product.price}€
-                        </motion.span>
+                        )}
                         {product.originalPrice > product.price && (
-                          <div className="flex flex-col">
-                            <span className="text-base sm:text-lg text-gray-500 line-through">
-                              {product.originalPrice}€
-                            </span>
-                            <span className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-semibold">
-                              -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                            </span>
-                          </div>
+                          <motion.div
+                            animate={{ scale: [1, 1.05, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="bg-gradient-to-br from-orange-500 to-red-500 rounded-lg px-2 py-1 text-white text-xs font-medium shadow-lg"
+                          >
+                            -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                          </motion.div>
                         )}
                       </div>
-                      
-                      {/* Enhanced progress bar */}
-                      <div className="mb-4 sm:mb-6">
-                        <div className="flex justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2">
-                          <span>Popularité</span>
-                          <span>{Math.min(Math.round((product.reviews / 600) * 100), 100)}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2 overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${Math.min(Math.round((product.reviews / 600) * 100), 100)}%` }}
-                            transition={{ duration: 1.5, delay: index * 0.1 }}
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full relative"
-                          >
-                            <motion.div
-                              animate={{
-                                x: ["-100%", "100%"],
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                              }}
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                            />
-                          </motion.div>
-                        </div>
-                      </div>
-                    </CardContent>
-                    
-                    <CardFooter className="p-6 sm:p-8 pt-0 relative z-10">
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full"
-                      >
-                        <Button 
-                          className={`w-full h-12 sm:h-14 text-base sm:text-lg font-semibold rounded-2xl transition-all duration-300 relative overflow-hidden ${
-                            product.inStock 
-                              ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-2xl hover:shadow-blue-500/25" 
-                              : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-                          }`}
-                          disabled={!product.inStock}
+
+                      {/* Floating action buttons */}
+                      <div className="absolute top-2 right-2 z-20 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-8 h-8 bg-white/95 dark:bg-gray-700/95 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50 transition-all duration-200 group/heart"
+                          aria-label="Ajouter aux favoris"
                         >
-                          {product.inStock && (
-                            <motion.div
-                              animate={{
-                                x: ["-100%", "100%"],
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                              }}
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300"
-                            />
-                          )}
-                          <div className="relative z-10 flex items-center justify-center space-x-2 sm:space-x-3">
-                            <FiShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-sm sm:text-base">
-                              {product.inStock ? "Ajouter au Panier" : "Me Notifier de la Disponibilité"}
-                            </span>
+                          <FiHeart className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover/heart:text-red-500 dark:group-hover/heart:text-red-400 transition-colors duration-200" />
+                        </motion.button>
+                      </div>
+                      
+                      {/* Product Image Container */}
+                      <div className="flex-1 flex items-center justify-center">
+                        <motion.div 
+                          className="relative text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+                          animate={{ 
+                            rotateY: [0, 2, 0],
+                            scale: [1, 1.02, 1]
+                          }}
+                          transition={{ 
+                            duration: 4, 
+                            repeat: Infinity, 
+                            ease: "easeInOut" 
+                          }}
+                          whileHover={{ scale: 1.1, rotateY: 15 }}
+                        >
+                          {product.image}
+                          {/* Drop shadow effect */}
+                          <div className="absolute inset-0 blur-xl opacity-30 -z-10">{product.image}</div>
+                        </motion.div>
+                      </div>
+
+                      {/* Enhanced Product Info Section with better dark theme */}
+                      <motion.div 
+                        className="bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg md:rounded-xl p-2 md:p-3 mt-1 md:mt-2 border border-gray-200/60 dark:border-gray-600/60 shadow-sm dark:shadow-gray-900/20"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ 
+                          opacity: 1,
+                          y: 0
+                        }}
+                        transition={{ duration: 0.6, delay: 0.3 }}
+                      >
+                        <div className="flex items-center justify-between text-gray-800 dark:text-gray-100 mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-1 mb-1">
+                              <Badge variant="outline" className="py-3 text-blue-600 dark:text-blue-300 rounded-full border-blue-200/60 dark:border-blue-400/50 text-xs bg-blue-50/60 dark:bg-blue-900/40 h-4 shadow-sm">
+                                {product.category}
+                              </Badge>
+                              <div className="flex items-center space-x-1">
+                                <FiStar className="w-3 h-3 fill-yellow-400 text-yellow-400 dark:fill-yellow-300 dark:text-yellow-300" />
+                                <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                                  {product.rating}
+                                </span>
+                              </div>
+                            </div>
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Prix</p>
+                            <div className="flex items-center space-x-1">
+                              <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-gray-100">
+                                {product.price}€
+                              </span>
+                              {product.originalPrice > product.price && (
+                                <span className="text-xs text-gray-500 dark:text-gray-400 line-through">
+                                  {product.originalPrice}€
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </Button>
+                          
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20">
+                              <FiShoppingCart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
+                            </Button>
+                            {!product.inStock && (
+                              <Badge className="bg-gradient-to-r from-red-500 to-pink-500 dark:from-red-600 dark:to-pink-600 text-white text-xs px-2 py-1 shadow-sm">
+                                Rupture
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Product Name */}
+                        <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 leading-tight">
+                          {product.name}
+                        </h3>
                       </motion.div>
-                    </CardFooter>
-                  </Card>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
