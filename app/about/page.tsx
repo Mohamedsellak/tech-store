@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiUsers, FiTarget, FiAward, FiTruck, FiShield, FiHeart, FiMapPin, FiMail, FiPhone } from "react-icons/fi";
+import { FiUsers, FiTarget, FiAward, FiTruck, FiShield, FiHeart, FiMail } from "react-icons/fi";
 import { BsCpu, BsLightning, BsGlobe, BsPeople } from "react-icons/bs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 const values = [
@@ -116,15 +115,15 @@ export default function AboutPage() {
           </div>
           
           <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight leading-tight">
-            Redéfinir l'Excellence
+            Redéfinir l&apos;Excellence
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               {" "}Technologique
             </span>
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-            Depuis 2018, TechStore s'impose comme la référence française pour les produits technologiques 
-            premium. Notre mission : démocratiser l'accès aux innovations qui transforment notre quotidien.
+            Depuis 2018, TechStore s&apos;impose comme la référence française pour les produits technologiques 
+            premium. Notre mission : démocratiser l&apos;accès aux innovations qui transforment notre quotidien.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -185,7 +184,7 @@ export default function AboutPage() {
               Nos Valeurs Fondamentales
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Ces principes guident chacune de nos décisions et façonnent l'expérience que nous offrons à nos clients
+              Ces principes guident chacune de nos décisions et façonnent l&apos;expérience que nous offrons à nos clients
             </p>
           </div>
 
@@ -228,7 +227,7 @@ export default function AboutPage() {
               Notre Parcours
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Découvrez les étapes clés qui ont façonné TechStore et notre vision de l'avenir
+              Découvrez les étapes clés qui ont façonné TechStore et notre vision de l&apos;avenir
             </p>
           </div>
 
@@ -330,8 +329,8 @@ export default function AboutPage() {
                 Notre Mission
               </h3>
               <p className="text-2xl text-blue-100 leading-relaxed max-w-4xl mx-auto mb-8">
-                "Rendre la technologie premium accessible à tous, en offrant une expérience d'achat 
-                exceptionnelle et un accompagnement personnalisé pour chaque client."
+                &apos;Rendre la technologie premium accessible à tous, en offrant une expérience d&apos;achat 
+                exceptionnelle et un accompagnement personnalisé pour chaque client.&apos;
               </p>
               <div className="flex items-center justify-center space-x-8 text-blue-200">
                 <div className="flex items-center space-x-2">
@@ -361,7 +360,7 @@ export default function AboutPage() {
           <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-0 shadow-xl rounded-3xl">
             <CardContent className="p-12">
               <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                Rejoignez l'Aventure TechStore
+                Rejoignez l&apos;Aventure TechStore
               </h3>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
                 Vous partagez notre passion pour la technologie ? Découvrez nos opportunités 

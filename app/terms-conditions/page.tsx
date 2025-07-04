@@ -215,7 +215,7 @@ export default function TermsConditionsPage() {
             Conditions Générales de Vente
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Découvrez les conditions qui régissent l'utilisation de notre site et l'achat de nos produits
+            Découvrez les conditions qui régissent l&apos;utilisation de notre site et l&apos;achat de nos produits
           </p>
           <div className="mt-6 text-sm text-gray-500">
             Dernière mise à jour : 1er janvier 2025

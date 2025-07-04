@@ -1,15 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiEye, FiPlay, FiChevronDown, FiStar, FiCpu, FiZap, FiBattery, FiCamera } from "react-icons/fi";
+import { FiEye, FiChevronDown, FiStar, FiCpu, FiZap, FiBattery, FiCamera } from "react-icons/fi";
 import { BsLightning, BsGift, BsShieldCheck, BsSpeedometer, BsTrophy, BsHeart } from "react-icons/bs";
 import { AiOutlineThunderbolt, AiOutlineRocket } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 // Hero slides data with general tech content
 const heroSlides = [
@@ -56,7 +54,6 @@ const heroSlides = [
 
 export default function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const router = useRouter();
 
   // Auto-slide functionality
   useEffect(() => {

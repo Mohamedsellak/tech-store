@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { FiShoppingCart, FiStar, FiHeart, FiEye, FiSearch, FiFilter, FiX } from "react-icons/fi";
-import { AiOutlineLaptop, AiOutlineTablet, AiOutlineMobile } from "react-icons/ai";
-import { BsHeadphones, BsSmartwatch, BsController, BsCamera } from "react-icons/bs";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useState } from "react";
 import { allProducts, categories, brands, type Product } from "@/lib/products";
+import Image from "next/image";
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -216,7 +215,7 @@ export default function ProductsPage() {
                   </h1>
                   <div className="flex items-center space-x-4">
                     <p className="text-gray-600 dark:text-gray-300 text-lg">
-                      {sortedProducts.length} produit{sortedProducts.length > 1 ? 's' : ''} d'exception
+                      {sortedProducts.length} produit{sortedProducts.length > 1 ? 's' : ''} d&apos;exception
                     </p>
                     <div className="flex items-center space-x-1">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -276,7 +275,7 @@ export default function ProductsPage() {
                           whileHover={{ scale: 1.1, rotateY: 15 }}
                           transition={{ duration: 0.3 }}
                         >
-                          <img
+                          <Image
                             src={product.image}
                             alt={product.name}
                             className="w-full h-full object-contain"
@@ -426,7 +425,7 @@ export default function ProductsPage() {
                     Aucun produit trouvé
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-6">
-                    Essayez de modifier vos filtres ou votre recherche pour découvrir nos produits d'exception
+                    Essayez de modifier vos filtres ou votre recherche pour découvrir nos produits d&apos;exception
                   </p>
                   <Button 
                     onClick={() => {
@@ -458,7 +457,7 @@ export default function ProductsPage() {
 }
 
 // Enhanced Product Modal Component
-function ProductModal({ product, onClose }: { product: any; onClose: () => void }) {
+function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
       <motion.div
@@ -501,7 +500,7 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
                   whileHover={{ scale: 1.1, rotateY: 15 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-contain"
@@ -532,7 +531,7 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.name}
                       className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-300"

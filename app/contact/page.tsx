@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiPhone, FiMail, FiMapPin, FiClock, FiMessageCircle, FiSend, FiUser, FiHelpCircle } from "react-icons/fi";
+import { FiPhone, FiMail, FiMapPin, FiClock, FiMessageCircle, FiSend, FiHelpCircle } from "react-icons/fi";
 import { BsCpu, BsHeadphones, BsShield, BsLightning } from "react-icons/bs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 const contactMethods = [
@@ -142,7 +141,7 @@ export default function ContactPage() {
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Notre équipe d'experts est à votre disposition pour répondre à toutes vos questions 
+            Notre équipe d&apos;experts est à votre disposition pour répondre à toutes vos questions
             et vous accompagner dans vos projets technologiques.
           </p>
         </motion.div>
@@ -356,7 +355,7 @@ export default function ContactPage() {
               <CardHeader>
                 <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <FiClock className="w-5 h-5" />
-                  Horaires d'Ouverture
+                  Horaires d&apos;Ouverture
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -385,7 +384,7 @@ export default function ContactPage() {
             {/* Quick Actions */}
             <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-3xl">
               <CardContent className="p-8 text-center">
-                <h3 className="text-xl font-bold mb-4">Besoin d'une Aide Urgente ?</h3>
+                <h3 className="text-xl font-bold mb-4">Besoin d&apos;une Aide Urgente ?</h3>
                 <p className="text-blue-100 mb-6">
                   Notre chat en direct est disponible pour vous aider immédiatement.
                 </p>

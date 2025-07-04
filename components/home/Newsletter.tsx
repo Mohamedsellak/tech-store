@@ -54,7 +54,7 @@ export default function Newsletter() {
               </div>
               
               <Button className="h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 rounded-lg transition-colors">
-                S'abonner
+                S&apos;abonner
                 <FiArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>

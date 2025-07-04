@@ -5,9 +5,8 @@ import { FiCheckCircle, FiMail, FiPackage, FiTruck, FiHome } from "react-icons/f
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function ThankYouPage() {
   const [orderNumber] = useState(() => 
@@ -191,7 +190,7 @@ export default function ThankYouPage() {
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Votre commande sera livrée sous 3-5 jours ouvrés. 
-                  Vous recevrez un numéro de suivi dès l'expédition.
+                  Vous recevrez un numéro de suivi dès l&apos;expédition.
                 </p>
                 <p className="text-sm text-green-600 dark:text-green-400 font-medium">
                   Livraison gratuite incluse ! 🚚
@@ -256,7 +255,7 @@ export default function ThankYouPage() {
             <Link href="/">
               <Button size="lg" className="w-full sm:w-auto">
                 <FiHome className="w-5 h-5 mr-2" />
-                Retour à l'accueil
+                Retour à l&apos;accueil
               </Button>
             </Link>
             <Link href="/products">
@@ -274,7 +273,7 @@ export default function ThankYouPage() {
             className="text-center mt-12 p-6 bg-gray-100 dark:bg-gray-800 rounded-xl"
           >
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-              Besoin d'aide ?
+              Besoin d&apos;aide ?
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Notre équipe support est là pour vous aider

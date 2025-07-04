@@ -1,45 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShoppingCart, FiCreditCard, FiMapPin, FiUser, FiMail, FiPhone } from "react-icons/fi";
+import { FiShoppingCart, FiCreditCard, FiMapPin, FiUser } from "react-icons/fi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { getProductById } from "@/lib/products";
+import Image from "next/image";
 
-// Sample product data (in real app, this would come from API/database)
-const productData: { [key: string]: any } = {
-  "1": {
-    id: 1,
-    name: "iPhone 15 Pro Max",
-    price: 1199,
-    originalPrice: 1299,
-    image: "📱",
-    category: "Smartphones",
-    brand: "Apple"
-  },
-  "2": {
-    id: 2,
-    name: "Samsung Galaxy S24 Ultra",
-    price: 1099,
-    originalPrice: 1199,
-    image: "📱",
-    category: "Smartphones",
-    brand: "Samsung"
-  }
-};
-
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const productId = searchParams.get('product');
-  const product = productId ? productData[productId] : null;
+  const product = productId ? getProductById(parseInt(productId)) : null;
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -284,7 +263,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="expiryDate">Date d'expiration *</Label>
+                          <Label htmlFor="expiryDate">Date d&apos;expiration *</Label>
                           <Input
                             id="expiryDate"
                             value={formData.expiryDate}
@@ -345,8 +324,13 @@ export default function CheckoutPage() {
                 <CardContent className="space-y-6">
                   {/* Product */}
                   <div className="flex space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-lg flex items-center justify-center">
-                      <span className="text-2xl">{product.image}</span>
+                    <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-lg overflow-hidden relative">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -355,13 +339,41 @@ export default function CheckoutPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         {product.brand} • {product.category}
                       </p>
+                      {product.isNew && (
+                        <span className="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                          Nouveau
+                        </span>
+                      )}
                       <div className="flex items-center space-x-2 mt-1">
                         <span className="font-bold text-lg">{product.price}€</span>
-                        {product.originalPrice > product.price && (
+                        {product.originalPrice && product.originalPrice > product.price && (
                           <span className="text-sm text-gray-500 line-through">
                             {product.originalPrice}€
                           </span>
                         )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Product Details */}
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900 dark:text-white">Détails du produit</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                      {product.description}
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-1">
+                        <span className="text-yellow-400">⭐</span>
+                        <span>{product.rating}</span>
+                        <span className="text-gray-500">({product.reviews} avis)</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <div className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                        <span className={product.inStock ? 'text-green-600' : 'text-red-600'}>
+                          {product.inStock ? 'En stock' : 'Rupture de stock'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -411,5 +423,20 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 pt-28 pb-12 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Chargement...</p>
+        </div>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }

@@ -1,11 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiArrowRight } from "react-icons/fi";
 import { AiOutlineLaptop, AiOutlineTablet, AiOutlineMobile } from "react-icons/ai";
 import { BsHeadphones, BsSmartwatch, BsCpu, BsController, BsCamera } from "react-icons/bs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 // Product categories - Clean and minimal
 const categories = [

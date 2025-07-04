@@ -91,7 +91,7 @@ export default function FeaturesBar() {
 					>
 						Des services professionnels qui font la différence dans votre
 						<br className="hidden lg:block" />
-						expérience d'achat technologique premium
+						expérience d&apos;achat technologique premium
 					</motion.p>
 				</motion.div>
 

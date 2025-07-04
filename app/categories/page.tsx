@@ -1,15 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShoppingCart, FiStar, FiHeart, FiEye, FiArrowRight } from "react-icons/fi";
-import { AiOutlineLaptop, AiOutlineTablet, AiOutlineMobile } from "react-icons/ai";
-import { BsHeadphones, BsSmartwatch, BsCpu, BsController, BsCamera, BsKeyboard, BsMouse, BsDisplay } from "react-icons/bs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { FiShoppingCart, FiStar, FiHeart,FiArrowRight } from "react-icons/fi";
+import { AiOutlineMobile } from "react-icons/ai";
+import { BsHeadphones, BsSmartwatch, BsCpu, BsController, BsCamera, BsKeyboard } from "react-icons/bs";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useState } from "react";
-import { categories as productCategories, getProductsByCategory, getFeaturedProducts, allProducts } from "@/lib/products";
+import { categories as productCategories, getProductsByCategory, getFeaturedProducts } from "@/lib/products";
+import Image from "next/image";
+
+// Interface for category structure
+interface CategoryItem {
+  id: string;
+  name: string;
+  value: string;
+  description: string;
+  icon: React.ReactElement;
+  count: number;
+  gradient: string;
+  featured: boolean;
+  subcategories: string[];
+}
 
 // Icon mapping for categories
 const categoryIcons: { [key: string]: React.ReactElement } = {
@@ -49,7 +63,6 @@ const getCategoryBrands = (categoryValue: string) => {
 };
 
 export default function CategoriesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'featured'>('all');
 
   // Build categories from actual product data
@@ -73,7 +86,7 @@ export default function CategoriesPage() {
       };
     });
 
-  const filteredCategories = categories.filter((category: any) => 
+  const filteredCategories = categories.filter((category: { featured: boolean }) => 
     filter === 'all' || category.featured
   );
 
@@ -132,7 +145,7 @@ export default function CategoriesPage() {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredCategories.map((category: any, index: number) => (
+          {filteredCategories.map((category: CategoryItem, index: number) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 20 }}
@@ -140,9 +153,9 @@ export default function CategoriesPage() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
               className="group cursor-pointer"
-              onClick={() => setSelectedCategory(category.id)}
             >
-              <Card className="h-full text-center hover:shadow-2xl transition-all duration-500 border-0 shadow-lg bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden relative">
+              <Link href={`/products?category=${category.value}`}>
+                <Card className="h-full text-center hover:shadow-2xl transition-all duration-500 border-0 shadow-lg bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden relative">
                 {/* Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 
@@ -206,6 +219,7 @@ export default function CategoriesPage() {
                   </motion.div>
                 </CardContent>
               </Card>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -309,14 +323,14 @@ export default function CategoriesPage() {
                         }}
                         whileHover={{ scale: 1.1, rotateY: 15 }}
                       >
-                        <img
+                        <Image
                           src={product.image}
                           alt={product.name}
                           className="w-full h-full object-contain"
                         />
                         {/* Drop shadow effect */}
                         <div className="absolute inset-0 blur-xl opacity-30 -z-10">
-                          <img
+                          <Image
                             src={product.image}
                             alt=""
                             className="w-full h-full object-contain"
@@ -398,7 +412,7 @@ export default function CategoriesPage() {
                 Vous ne trouvez pas ce que vous cherchez ?
               </h3>
               <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Contactez notre équipe d'experts pour des recommandations personnalisées
+                Contactez notre équipe d&apos;experts pour des recommandations personnalisées
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contact">

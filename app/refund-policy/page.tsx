@@ -215,7 +215,7 @@ export default function RefundPolicyPage() {
             Politique de Remboursement
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Découvrez nos conditions de retour et de remboursement conçues pour votre tranquillité d'esprit
+            Découvrez nos conditions de retour et de remboursement conçues pour votre tranquillité d&apos;esprit
           </p>
           <div className="mt-6 text-sm text-gray-500">
             Dernière mise à jour : 1er janvier 2025
@@ -231,7 +231,7 @@ export default function RefundPolicyPage() {
         >
           <h2 className="text-3xl font-bold text-center mb-8">Processus en 4 étapes</h2>
           <div className="grid md:grid-cols-4 gap-6">
-            {refundSteps.map((step, index) => {
+            {refundSteps.map((step) => {
               const IconComponent = step.icon;
               return (
                 <Card key={step.step} className="text-center hover:shadow-lg transition-all duration-300">
@@ -372,7 +372,7 @@ export default function RefundPolicyPage() {
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-green-600 to-blue-600 text-white">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-4">
-                Besoin d'aide pour un retour ?
+                Besoin d&apos;aide pour un retour ?
               </h3>
               <p className="text-green-100 mb-6">
                 Notre équipe est là pour vous accompagner dans votre processus de retour. Contactez-nous pour une assistance personnalisée.
