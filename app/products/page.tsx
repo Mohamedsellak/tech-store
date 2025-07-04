@@ -14,194 +14,7 @@ import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useState } from "react";
-
-// All products data
-const allProducts = [
-  // Smartphones
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max",
-    price: 1199,
-    originalPrice: 1299,
-    rating: 4.9,
-    reviews: 234,
-    image: "📱",
-    category: "Smartphones",
-    brand: "Apple",
-    inStock: true,
-    isNew: true,
-    description: "Le smartphone le plus avancé avec le chip A17 Pro et un design en titane."
-  },
-  {
-    id: 2,
-    name: "Samsung Galaxy S24 Ultra",
-    price: 1099,
-    originalPrice: 1199,
-    rating: 4.8,
-    reviews: 189,
-    image: "📱",
-    category: "Smartphones",
-    brand: "Samsung",
-    inStock: true,
-    isNew: false,
-    description: "Smartphone premium avec S Pen intégré et caméra de 200MP."
-  },
-  {
-    id: 3,
-    name: "Google Pixel 8 Pro",
-    price: 899,
-    originalPrice: 999,
-    rating: 4.7,
-    reviews: 156,
-    image: "📱",
-    category: "Smartphones",
-    brand: "Google",
-    inStock: false,
-    isNew: false,
-    description: "L'IA de Google dans un smartphone avec des photos extraordinaires."
-  },
-  // Laptops
-  {
-    id: 4,
-    name: "MacBook Pro 16\" M3 Max",
-    price: 2499,
-    originalPrice: 2699,
-    rating: 4.9,
-    reviews: 127,
-    image: "💻",
-    category: "Laptops",
-    brand: "Apple",
-    inStock: true,
-    isNew: true,
-    description: "Le laptop le plus puissant pour les professionnels créatifs."
-  },
-  {
-    id: 5,
-    name: "Dell XPS 15",
-    price: 1899,
-    originalPrice: 2099,
-    rating: 4.6,
-    reviews: 98,
-    image: "💻",
-    category: "Laptops",
-    brand: "Dell",
-    inStock: true,
-    isNew: false,
-    description: "Ultrabook premium avec écran OLED 4K et performances exceptionnelles."
-  },
-  {
-    id: 6,
-    name: "ThinkPad X1 Carbon",
-    price: 1599,
-    originalPrice: 1799,
-    rating: 4.7,
-    reviews: 143,
-    image: "💻",
-    category: "Laptops",
-    brand: "Lenovo",
-    inStock: true,
-    isNew: false,
-    description: "Laptop business ultra-léger avec sécurité enterprise."
-  },
-  // Audio
-  {
-    id: 7,
-    name: "AirPods Pro 2",
-    price: 249,
-    originalPrice: 279,
-    rating: 4.8,
-    reviews: 567,
-    image: "🎧",
-    category: "Audio",
-    brand: "Apple",
-    inStock: true,
-    isNew: false,
-    description: "Écouteurs sans fil avec réduction de bruit active révolutionnaire."
-  },
-  {
-    id: 8,
-    name: "Sony WH-1000XM5",
-    price: 329,
-    originalPrice: 399,
-    rating: 4.9,
-    reviews: 432,
-    image: "🎧",
-    category: "Audio",
-    brand: "Sony",
-    inStock: true,
-    isNew: true,
-    description: "Casque premium avec la meilleure réduction de bruit du marché."
-  },
-  // Tablets
-  {
-    id: 9,
-    name: "iPad Pro 12.9\" M2",
-    price: 1099,
-    originalPrice: 1199,
-    rating: 4.8,
-    reviews: 201,
-    image: "📱",
-    category: "Tablets",
-    brand: "Apple",
-    inStock: true,
-    isNew: false,
-    description: "Tablette professionnelle avec chip M2 et écran Liquid Retina XDR."
-  },
-  {
-    id: 10,
-    name: "Samsung Galaxy Tab S9 Ultra",
-    price: 999,
-    originalPrice: 1099,
-    rating: 4.6,
-    reviews: 134,
-    image: "📱",
-    category: "Tablets",
-    brand: "Samsung",
-    inStock: true,
-    isNew: true,
-    description: "Grande tablette Android avec S Pen et écran AMOLED 14.6\"."
-  },
-  // Gaming
-  {
-    id: 11,
-    name: "PlayStation 5",
-    price: 499,
-    originalPrice: 549,
-    rating: 4.8,
-    reviews: 892,
-    image: "🎮",
-    category: "Gaming",
-    brand: "Sony",
-    inStock: false,
-    isNew: false,
-    description: "Console de jeu nouvelle génération avec SSD ultra-rapide."
-  },
-  {
-    id: 12,
-    name: "Xbox Series X",
-    price: 499,
-    originalPrice: 549,
-    rating: 4.7,
-    reviews: 743,
-    image: "🎮",
-    category: "Gaming",
-    brand: "Microsoft",
-    inStock: true,
-    isNew: false,
-    description: "Console 4K la plus puissante avec Quick Resume."
-  }
-];
-
-const categories = [
-  { name: "Tous", value: "all", icon: "🛍️" },
-  { name: "Smartphones", value: "Smartphones", icon: "📱" },
-  { name: "Laptops", value: "Laptops", icon: "💻" },
-  { name: "Tablets", value: "Tablets", icon: "📱" },
-  { name: "Audio", value: "Audio", icon: "🎧" },
-  { name: "Gaming", value: "Gaming", icon: "🎮" },
-];
-
-const brands = ["Apple", "Samsung", "Google", "Dell", "Lenovo", "Sony", "Microsoft"];
+import { allProducts, categories, brands, type Product } from "@/lib/products";
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -210,7 +23,7 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("name");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Filter products
   const filteredProducts = allProducts.filter(product => {
@@ -459,11 +272,15 @@ export default function ProductsPage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/20 dark:to-purple-900/20"></div>
                         
                         <motion.div 
-                          className="text-7xl relative z-10"
+                          className="relative z-10 w-full h-full p-6"
                           whileHover={{ scale: 1.1, rotateY: 15 }}
                           transition={{ duration: 0.3 }}
                         >
-                          {product.image}
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-contain"
+                          />
                         </motion.div>
                         
                         {/* Floating Badges */}
@@ -484,7 +301,7 @@ export default function ProductsPage() {
                               Rupture
                             </Badge>
                           )}
-                          {product.originalPrice > product.price && (
+                          {product.originalPrice && product.originalPrice > product.price && (
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
@@ -563,7 +380,7 @@ export default function ProductsPage() {
                           <span className="text-2xl font-bold text-gray-900 dark:text-white">
                             {product.price}€
                           </span>
-                          {product.originalPrice > product.price && (
+                          {product.originalPrice && product.originalPrice > product.price && (
                             <span className="text-lg text-gray-500 line-through">
                               {product.originalPrice}€
                             </span>
@@ -680,11 +497,15 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
               <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-3xl h-96 flex items-center justify-center mb-6 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-purple-50/30 dark:from-blue-900/20 dark:to-purple-900/20"></div>
                 <motion.div 
-                  className="text-9xl relative z-10"
+                  className="relative z-10 w-full h-full p-8"
                   whileHover={{ scale: 1.1, rotateY: 15 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {product.image}
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-contain"
+                  />
                 </motion.div>
                 
                 {/* Floating Product Badges */}
@@ -694,7 +515,7 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
                       Nouveau
                     </Badge>
                   )}
-                  {product.originalPrice > product.price && (
+                  {product.originalPrice && product.originalPrice > product.price && (
                     <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
                       -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                     </Badge>
@@ -711,7 +532,11 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <div className="text-2xl group-hover:scale-110 transition-transform duration-300">{product.image}</div>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-300"
+                    />
                   </motion.div>
                 ))}
               </div>
@@ -774,7 +599,7 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
                   <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {product.price}€
                   </span>
-                  {product.originalPrice > product.price && (
+                  {product.originalPrice && product.originalPrice > product.price && (
                     <div className="space-y-1">
                       <span className="text-2xl text-gray-500 line-through block">
                         {product.originalPrice}€

@@ -9,126 +9,71 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useState } from "react";
+import { categories as productCategories, getProductsByCategory, getFeaturedProducts, allProducts } from "@/lib/products";
 
-// Extended categories data
-const categories = [
-  {
-    id: 1,
-    name: "Smartphones",
-    description: "Les derniers smartphones haut de gamme",
-    icon: <AiOutlineMobile className="w-8 h-8" />,
-    count: 45,
-    color: "bg-blue-500",
-    gradient: "from-blue-500 to-cyan-500",
-    featured: true,
-    subcategories: ["iPhone", "Samsung Galaxy", "Google Pixel", "OnePlus", "Xiaomi"]
-  },
-  {
-    id: 2,
-    name: "Ordinateurs Portables",
-    description: "Laptops professionnels et gaming",
-    icon: <AiOutlineLaptop className="w-8 h-8" />,
-    count: 32,
-    color: "bg-purple-500",
-    gradient: "from-purple-500 to-pink-500",
-    featured: true,
-    subcategories: ["MacBook", "ThinkPad", "Gaming", "Ultrabooks", "Workstations"]
-  },
-  {
-    id: 3,
-    name: "Tablettes",
-    description: "Tablettes créatives et productives",
-    icon: <AiOutlineTablet className="w-8 h-8" />,
-    count: 28,
-    color: "bg-green-500",
-    gradient: "from-green-500 to-emerald-500",
-    featured: false,
-    subcategories: ["iPad", "Surface", "Android", "Graphiques", "E-readers"]
-  },
-  {
-    id: 4,
-    name: "Audio & Casques",
-    description: "Équipement audio professionnel",
-    icon: <BsHeadphones className="w-8 h-8" />,
-    count: 56,
-    color: "bg-red-500",
-    gradient: "from-red-500 to-orange-500",
-    featured: true,
-    subcategories: ["AirPods", "Studio", "Gaming", "Sport", "Hi-Fi"]
-  },
-  {
-    id: 5,
-    name: "Montres Connectées",
-    description: "Wearables et fitness trackers",
-    icon: <BsSmartwatch className="w-8 h-8" />,
-    count: 23,
-    color: "bg-yellow-500",
-    gradient: "from-yellow-500 to-amber-500",
-    featured: false,
-    subcategories: ["Apple Watch", "Galaxy Watch", "Fitbit", "Garmin", "Amazfit"]
-  },
-  {
-    id: 6,
-    name: "Gaming",
-    description: "Consoles et accessoires gaming",
-    icon: <BsController className="w-8 h-8" />,
-    count: 34,
-    color: "bg-indigo-500",
-    gradient: "from-indigo-500 to-purple-500",
-    featured: true,
-    subcategories: ["PlayStation", "Xbox", "Nintendo", "PC Gaming", "VR"]
-  },
-  {
-    id: 7,
-    name: "Appareils Photo",
-    description: "Caméras et équipement photo",
-    icon: <BsCamera className="w-8 h-8" />,
-    count: 19,
-    color: "bg-pink-500",
-    gradient: "from-pink-500 to-rose-500",
-    featured: false,
-    subcategories: ["DSLR", "Mirrorless", "Action Cams", "Drones", "Lentilles"]
-  },
-  {
-    id: 8,
-    name: "PC & Composants",
-    description: "Ordinateurs et composants PC",
-    icon: <BsCpu className="w-8 h-8" />,
-    count: 27,
-    color: "bg-teal-500",
-    gradient: "from-teal-500 to-cyan-500",
-    featured: false,
-    subcategories: ["Processeurs", "Cartes Graphiques", "RAM", "Stockage", "Boîtiers"]
-  },
-  {
-    id: 9,
-    name: "Périphériques",
-    description: "Claviers, souris et accessoires",
-    icon: <BsKeyboard className="w-8 h-8" />,
-    count: 67,
-    color: "bg-slate-500",
-    gradient: "from-slate-500 to-gray-500",
-    featured: false,
-    subcategories: ["Claviers", "Souris", "Webcams", "Microphones", "Hubs USB"]
-  },
-  {
-    id: 10,
-    name: "Écrans & Moniteurs",
-    description: "Moniteurs professionnels et gaming",
-    icon: <BsDisplay className="w-8 h-8" />,
-    count: 41,
-    color: "bg-emerald-500",
-    gradient: "from-emerald-500 to-teal-500",
-    featured: false,
-    subcategories: ["4K", "Gaming", "Ultrawide", "Professionnels", "Portables"]
-  }
-];
+// Icon mapping for categories
+const categoryIcons: { [key: string]: React.ReactElement } = {
+  'Smartphones': <AiOutlineMobile className="w-8 h-8" />,
+  'Audio': <BsHeadphones className="w-8 h-8" />,
+  'Gaming': <BsController className="w-8 h-8" />,
+  'Smartwatches': <BsSmartwatch className="w-8 h-8" />,
+  'Cameras': <BsCamera className="w-8 h-8" />,
+  'Accessories': <BsKeyboard className="w-8 h-8" />
+};
+
+// Color gradients for categories
+const categoryGradients: { [key: string]: string } = {
+  'Smartphones': 'from-blue-500 to-cyan-500',
+  'Audio': 'from-red-500 to-orange-500',
+  'Gaming': 'from-indigo-500 to-purple-500',
+  'Smartwatches': 'from-yellow-500 to-amber-500',
+  'Cameras': 'from-pink-500 to-rose-500',
+  'Accessories': 'from-slate-500 to-gray-500'
+};
+
+// Category descriptions
+const categoryDescriptions: { [key: string]: string } = {
+  'Smartphones': 'Les derniers smartphones avec designs innovants',
+  'Audio': 'Équipement audio professionnel et casques premium',
+  'Gaming': 'Consoles et accessoires gaming pour tous les joueurs',
+  'Smartwatches': 'Montres connectées et wearables modernes',
+  'Cameras': 'Appareils photo et équipement de capture vidéo',
+  'Accessories': 'Périphériques et accessoires informatiques'
+};
+
+// Get top brands for each category
+const getCategoryBrands = (categoryValue: string) => {
+  const products = getProductsByCategory(categoryValue);
+  const brands = [...new Set(products.map(p => p.brand))];
+  return brands.slice(0, 3);
+};
 
 export default function CategoriesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'featured'>('all');
 
-  const filteredCategories = categories.filter(category => 
+  // Build categories from actual product data
+  const categories = productCategories
+    .filter(cat => cat.value !== 'all') // Exclude "all" category
+    .map(cat => {
+      const products = getProductsByCategory(cat.value);
+      const brands = getCategoryBrands(cat.value);
+      const isFeatured = ['Smartphones', 'Audio', 'Gaming'].includes(cat.value);
+      
+      return {
+        id: cat.value,
+        name: cat.name,
+        value: cat.value,
+        description: categoryDescriptions[cat.value] || `Découvrez notre sélection de ${cat.name.toLowerCase()}`,
+        icon: categoryIcons[cat.value] || <BsCpu className="w-8 h-8" />,
+        count: products.length,
+        gradient: categoryGradients[cat.value] || 'from-gray-500 to-slate-500',
+        featured: isFeatured,
+        subcategories: brands.length > 0 ? brands : ['Premium', 'Standard', 'Pro']
+      };
+    });
+
+  const filteredCategories = categories.filter((category: any) => 
     filter === 'all' || category.featured
   );
 
@@ -187,7 +132,7 @@ export default function CategoriesPage() {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredCategories.map((category, index) => (
+          {filteredCategories.map((category: any, index: number) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 20 }}
@@ -234,7 +179,7 @@ export default function CategoriesPage() {
 
                   {/* Subcategories */}
                   <div className="flex flex-wrap gap-2 justify-center mb-6">
-                    {category.subcategories.slice(0, 3).map((sub, idx) => (
+                    {category.subcategories.slice(0, 3).map((sub: string, idx: number) => (
                       <Badge key={idx} variant="secondary" className="text-xs">
                         {sub}
                       </Badge>
@@ -252,7 +197,7 @@ export default function CategoriesPage() {
                     initial={{ x: -10 }}
                     whileHover={{ x: 0 }}
                   >
-                    <Link href={`/products?category=${category.name.toLowerCase()}`}>
+                    <Link href={`/products?category=${category.value}`}>
                       <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl">
                         Explorer
                         <FiArrowRight className="w-4 h-4 ml-2" />
@@ -273,6 +218,23 @@ export default function CategoriesPage() {
           className="mt-24"
         >
           <div className="text-center mb-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-cyan-500/15 dark:from-blue-400/20 dark:via-purple-400/20 dark:to-cyan-400/20 backdrop-blur-xl border border-blue-200/40 dark:border-blue-400/30 px-6 py-3 rounded-full mb-6 shadow-lg dark:shadow-blue-400/10"
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              >
+                <FiStar className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+              </motion.div>
+              <span className="text-blue-600 dark:text-blue-300 text-sm font-semibold tracking-wider uppercase">
+                Collection Premium
+              </span>
+              <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+            </motion.div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Produits Populaires par Catégorie
             </h2>
@@ -281,63 +243,143 @@ export default function CategoriesPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { 
-                name: "iPhone 15 Pro Max", 
-                category: "Smartphones", 
-                price: 1199, 
-                rating: 4.9, 
-                image: "📱",
-                gradient: "from-blue-500 to-cyan-500"
-              },
-              { 
-                name: "MacBook Pro M3", 
-                category: "Laptops", 
-                price: 2499, 
-                rating: 4.8, 
-                image: "💻",
-                gradient: "from-purple-500 to-pink-500"
-              },
-              { 
-                name: "AirPods Pro 2", 
-                category: "Audio", 
-                price: 249, 
-                rating: 4.7, 
-                image: "🎧",
-                gradient: "from-red-500 to-orange-500"
-              }
-            ].map((product, index) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            {getFeaturedProducts().slice(0, 4).map((product, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
-                whileHover={{ y: -5 }}
+                key={product.id}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ 
+                  opacity: 1,
+                  x: 0
+                }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="flex justify-center items-center relative group cursor-pointer"
               >
-                <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg rounded-2xl overflow-hidden">
-                  <CardHeader className="p-0">
-                    <div className={`relative h-48 bg-gradient-to-br ${product.gradient} flex items-center justify-center`}>
-                      <div className="text-6xl">{product.image}</div>
-                      <Badge className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white border-0">
-                        ⭐ {product.rating}
-                      </Badge>
+                <div className="relative">
+                  {/* Main Product Container with enhanced shadow and dark theme support */}
+                  <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl sm:rounded-2xl md:rounded-3xl p-2 sm:p-3 md:p-4 border border-gray-200/60 dark:border-gray-600/60 transition-all duration-500 flex flex-col justify-between h-[280px] w-[220px] sm:h-[320px] sm:w-[260px] md:h-[380px] md:w-[320px] lg:h-[420px] lg:w-[350px] shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 dark:hover:shadow-blue-400/20 dark:shadow-gray-900/20">
+                    
+                    {/* Enhanced badges with clean shadows */}
+                    <div className="absolute top-2 left-2 z-20 flex flex-col space-y-1">
+                      {product.isNew && (
+                        <motion.div
+                          initial={{ scale: 0, rotate: -45 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ delay: 0.2, type: "spring" }}
+                          className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg px-2 py-1 text-white text-xs font-medium shadow-lg"
+                        >
+                          Nouveau
+                        </motion.div>
+                      )}
+                      {product.originalPrice && product.originalPrice > product.price && (
+                        <motion.div
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="bg-gradient-to-br from-orange-500 to-red-500 rounded-lg px-2 py-1 text-white text-xs font-medium shadow-lg"
+                        >
+                          -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                        </motion.div>
+                      )}
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <Badge variant="outline" className="mb-3">{product.category}</Badge>
-                    <CardTitle className="text-xl mb-3">{product.name}</CardTitle>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {product.price}€
-                      </span>
-                      <Button size="sm" className="rounded-xl">
-                        <FiEye className="w-4 h-4 mr-2" />
-                        Voir
-                      </Button>
+
+                    {/* Floating action buttons */}
+                    <div className="absolute top-2 right-2 z-20 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-8 h-8 bg-white/95 dark:bg-gray-700/95 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50 transition-all duration-200 group/heart"
+                        aria-label="Ajouter aux favoris"
+                      >
+                        <FiHeart className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover/heart:text-red-500 dark:group-hover/heart:text-red-400 transition-colors duration-200" />
+                      </motion.button>
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    {/* Product Image Container */}
+                    <div className="flex-1 flex items-center justify-center">
+                      <motion.div 
+                        className="relative w-full h-32 sm:h-40 md:h-48 lg:h-56"
+                        animate={{ 
+                          rotateY: [0, 2, 0],
+                          scale: [1, 1.02, 1]
+                        }}
+                        transition={{ 
+                          duration: 4, 
+                          repeat: Infinity, 
+                          ease: "easeInOut" 
+                        }}
+                        whileHover={{ scale: 1.1, rotateY: 15 }}
+                      >
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-contain"
+                        />
+                        {/* Drop shadow effect */}
+                        <div className="absolute inset-0 blur-xl opacity-30 -z-10">
+                          <img
+                            src={product.image}
+                            alt=""
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* Enhanced Product Info Section with better dark theme */}
+                    <motion.div 
+                      className="bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg md:rounded-xl p-2 md:p-3 mt-1 md:mt-2 border border-gray-200/60 dark:border-gray-600/60 shadow-sm dark:shadow-gray-900/20"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ 
+                        opacity: 1,
+                        y: 0
+                      }}
+                      transition={{ duration: 0.6, delay: 0.3 }}
+                    >
+                      <div className="flex items-center justify-between text-gray-800 dark:text-gray-100 mb-2">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-1 mb-1">
+                            <Badge variant="outline" className="py-3 text-blue-600 dark:text-blue-300 rounded-full border-blue-200/60 dark:border-blue-400/50 text-xs bg-blue-50/60 dark:bg-blue-900/40 h-4 shadow-sm">
+                              {product.category}
+                            </Badge>
+                            <div className="flex items-center space-x-1">
+                              <FiStar className="w-3 h-3 fill-yellow-400 text-yellow-400 dark:fill-yellow-300 dark:text-yellow-300" />
+                              <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                                {product.rating}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Prix</p>
+                          <div className="flex items-center space-x-1">
+                            <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-gray-100">
+                              {product.price}€
+                            </span>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                              <span className="text-xs text-gray-500 dark:text-gray-400 line-through">
+                                {product.originalPrice}€
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-1 sm:space-x-2">
+                          <Button size="sm" className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20">
+                            <FiShoppingCart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
+                          </Button>
+                          {!product.inStock && (
+                            <Badge className="bg-gradient-to-r from-red-500 to-pink-500 dark:from-red-600 dark:to-pink-600 text-white text-xs px-2 py-1 shadow-sm">
+                              Rupture
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Product Name */}
+                      <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 leading-tight">
+                        {product.name}
+                      </h3>
+                    </motion.div>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>

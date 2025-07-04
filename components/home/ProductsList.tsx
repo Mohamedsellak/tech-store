@@ -2,166 +2,28 @@
 
 import { motion } from "framer-motion";
 import { FiShoppingCart, FiStar, FiHeart, FiArrowRight } from "react-icons/fi";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { getProductsByCategory, type Product } from "@/lib/products";
 
 // Featured products by category
-const featuredProducts = {
-  smartphones: [
-    {
-      id: 1,
-      name: "iPhone 15 Pro Max",
-      price: 1199,
-      originalPrice: 1299,
-      rating: 4.9,
-      reviews: 234,
-      image: "📱",
-      category: "Smartphones",
-      inStock: true,
-      isNew: true
-    },
-    {
-      id: 2,
-      name: "Samsung Galaxy S24 Ultra",
-      price: 1099,
-      originalPrice: 1199,
-      rating: 4.8,
-      reviews: 189,
-      image: "📱",
-      category: "Smartphones",
-      inStock: true,
-      isNew: false
-    },
-    {
-      id: 3,
-      name: "Google Pixel 8 Pro",
-      price: 899,
-      originalPrice: 999,
-      rating: 4.7,
-      reviews: 156,
-      image: "📱",
-      category: "Smartphones",
-      inStock: false,
-      isNew: false
-    },
-    {
-      id: 10,
-      name: "OnePlus 12 Pro",
-      price: 949,
-      originalPrice: 1049,
-      rating: 4.6,
-      reviews: 178,
-      image: "📱",
-      category: "Smartphones",
-      inStock: true,
-      isNew: true
-    }
-  ],
-  laptops: [
-    {
-      id: 4,
-      name: "MacBook Pro 16\" M3 Max",
-      price: 2499,
-      originalPrice: 2699,
-      rating: 4.9,
-      reviews: 127,
-      image: "💻",
-      category: "Laptops",
-      inStock: true,
-      isNew: true
-    },
-    {
-      id: 5,
-      name: "Dell XPS 15",
-      price: 1899,
-      originalPrice: 2099,
-      rating: 4.6,
-      reviews: 98,
-      image: "💻",
-      category: "Laptops",
-      inStock: true,
-      isNew: false
-    },
-    {
-      id: 6,
-      name: "ThinkPad X1 Carbon",
-      price: 1599,
-      originalPrice: 1799,
-      rating: 4.7,
-      reviews: 143,
-      image: "💻",
-      category: "Laptops",
-      inStock: true,
-      isNew: false
-    },
-    {
-      id: 11,
-      name: "ASUS ROG Strix G17",
-      price: 1799,
-      originalPrice: 1999,
-      rating: 4.5,
-      reviews: 165,
-      image: "💻",
-      category: "Laptops",
-      inStock: true,
-      isNew: false
-    }
-  ],
-  audio: [
-    {
-      id: 7,
-      name: "AirPods Pro 2",
-      price: 249,
-      originalPrice: 279,
-      rating: 4.8,
-      reviews: 567,
-      image: "🎧",
-      category: "Audio",
-      inStock: true,
-      isNew: false
-    },
-    {
-      id: 8,
-      name: "Sony WH-1000XM5",
-      price: 329,
-      originalPrice: 399,
-      rating: 4.9,
-      reviews: 432,
-      image: "🎧",
-      category: "Audio",
-      inStock: true,
-      isNew: true
-    },
-    {
-      id: 9,
-      name: "Bose QuietComfort 45",
-      price: 279,
-      originalPrice: 329,
-      rating: 4.6,
-      reviews: 298,
-      image: "🎧",
-      category: "Audio",
-      inStock: true,
-      isNew: false
-    },
-    {
-      id: 12,
-      name: "Sennheiser Momentum 4",
-      price: 299,
-      originalPrice: 349,
-      rating: 4.7,
-      reviews: 213,
-      image: "🎧",
-      category: "Audio",
-      inStock: true,
-      isNew: true
-    }
-  ]
-};
-
 export default function ProductsList() {
+  // Group products by category for display
+  const productsByCategory = {
+    smartphones: getProductsByCategory("Smartphones").slice(0, 4),
+    audio: getProductsByCategory("Audio").slice(0, 4),
+    gaming: getProductsByCategory("Gaming").slice(0, 4),
+    smartwatches: getProductsByCategory("Smartwatches").slice(0, 4),
+  };
+
+  const categoryDisplayNames = {
+    smartphones: "Smartphones",
+    audio: "Audio & Son",
+    gaming: "Gaming",
+    smartwatches: "Montres Connectées"
+  };
+
   return (
     <section className="relative py-16 sm:py-24 md:py-32 px-2 sm:px-4 md:px-6 overflow-hidden pt-0 -mt-16">
       {/* Enhanced background with subtle gradient */}
@@ -194,7 +56,7 @@ export default function ProductsList() {
       />
       
       <div className="container mx-auto relative z-10">
-        {Object.entries(featuredProducts).map(([categoryKey, products], categoryIndex) => (
+        {Object.entries(productsByCategory).map(([categoryKey, products], categoryIndex) => (
           <div key={categoryKey} className="mb-8 sm:mb-12 md:mb-16 last:mb-0">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -235,14 +97,6 @@ export default function ProductsList() {
                         phones
                       </span>
                     </>
-                  ) : categoryKey === 'laptops' ? (
-                    <>
-                      Ordinateurs
-                      <br />
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
-                        Portables
-                      </span>
-                    </>
                   ) : categoryKey === 'audio' ? (
                     <>
                       Audio &
@@ -251,7 +105,23 @@ export default function ProductsList() {
                         Casques
                       </span>
                     </>
-                  ) : categoryKey}
+                  ) : categoryKey === 'gaming' ? (
+                    <>
+                      Gaming &
+                      <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
+                        Accessoires
+                      </span>
+                    </>
+                  ) : categoryKey === 'smartwatches' ? (
+                    <>
+                      Montres
+                      <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
+                        Connectées
+                      </span>
+                    </>
+                  ) : categoryDisplayNames[categoryKey as keyof typeof categoryDisplayNames]}
                 </motion.h3>
                 
                 <motion.p
@@ -339,7 +209,7 @@ export default function ProductsList() {
                             Nouveau
                           </motion.div>
                         )}
-                        {product.originalPrice > product.price && (
+                        {product.originalPrice && product.originalPrice > product.price && (
                           <motion.div
                             animate={{ scale: [1, 1.05, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
@@ -365,7 +235,7 @@ export default function ProductsList() {
                       {/* Product Image Container */}
                       <div className="flex-1 flex items-center justify-center">
                         <motion.div 
-                          className="relative text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+                          className="relative w-full h-32 sm:h-40 md:h-48 lg:h-56"
                           animate={{ 
                             rotateY: [0, 2, 0],
                             scale: [1, 1.02, 1]
@@ -377,9 +247,19 @@ export default function ProductsList() {
                           }}
                           whileHover={{ scale: 1.1, rotateY: 15 }}
                         >
-                          {product.image}
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-contain"
+                          />
                           {/* Drop shadow effect */}
-                          <div className="absolute inset-0 blur-xl opacity-30 -z-10">{product.image}</div>
+                          <div className="absolute inset-0 blur-xl opacity-30 -z-10">
+                            <img
+                              src={product.image}
+                              alt=""
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
                         </motion.div>
                       </div>
 
@@ -411,7 +291,7 @@ export default function ProductsList() {
                               <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-gray-100">
                                 {product.price}€
                               </span>
-                              {product.originalPrice > product.price && (
+                              {product.originalPrice && product.originalPrice > product.price && (
                                 <span className="text-xs text-gray-500 dark:text-gray-400 line-through">
                                   {product.originalPrice}€
                                 </span>
