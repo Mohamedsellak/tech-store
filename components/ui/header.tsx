@@ -7,12 +7,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { getCartItemsCount, getWishlistItemsCount } from "@/lib/cart";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [wishlistItemsCount, setWishlistItemsCount] = useState(0);
   const pathname = usePathname();
+
+  useEffect(() => {
+    // Update counts when component mounts and periodically
+    const updateCounts = () => {
+      setCartItemsCount(getCartItemsCount());
+      setWishlistItemsCount(getWishlistItemsCount());
+    };
+
+    updateCounts();
+    
+    // Listen for storage changes (when cart/wishlist is updated in other components)
+    const handleStorageChange = () => {
+      updateCounts();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also update counts every second to catch changes from same tab
+    const interval = setInterval(updateCounts, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <header className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl mx-auto px-6">
@@ -127,38 +155,46 @@ export function Header() {
             </Button>
 
             {/* Wishlist */}
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="relative w-9 h-9 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all duration-300"
-            >
-              <FiHeart className="w-4 h-4" />
-              <motion.span 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 500 }}
-                className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg"
+            <Link href="/favoris">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="relative w-9 h-9 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all duration-300"
               >
-                3
-              </motion.span>
-            </Button>
+                <FiHeart className="w-4 h-4" />
+                {wishlistItemsCount > 0 && (
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 500 }}
+                    className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg"
+                  >
+                    {wishlistItemsCount}
+                  </motion.span>
+                )}
+              </Button>
+            </Link>
 
             {/* Cart */}
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="relative w-9 h-9 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all duration-300"
-            >
-              <FiShoppingCart className="w-4 h-4" />
-              <motion.span 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.7, type: "spring", stiffness: 500 }}
-                className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg"
+            <Link href="/panier">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="relative w-9 h-9 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all duration-300"
               >
-                2
-              </motion.span>
-            </Button>
+                <FiShoppingCart className="w-4 h-4" />
+                {cartItemsCount > 0 && (
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.7, type: "spring", stiffness: 500 }}
+                    className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg"
+                  >
+                    {cartItemsCount}
+                  </motion.span>
+                )}
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button 
@@ -243,6 +279,40 @@ export function Header() {
             }`}
           >
             Contact
+          </Link>
+          <Link 
+            href="/favoris" 
+            onClick={() => setIsMenuOpen(false)}
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
+              pathname === "/favoris" 
+                ? "text-white bg-gradient-to-r from-red-500 to-pink-500 shadow-md font-semibold" 
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+          >
+            <FiHeart className="w-4 h-4 mr-2" />
+            Mes Favoris
+            {wishlistItemsCount > 0 && (
+              <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {wishlistItemsCount}
+              </span>
+            )}
+          </Link>
+          <Link 
+            href="/panier" 
+            onClick={() => setIsMenuOpen(false)}
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
+              pathname === "/panier" 
+                ? "text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-md font-semibold" 
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+          >
+            <FiShoppingCart className="w-4 h-4 mr-2" />
+            Mon Panier
+            {cartItemsCount > 0 && (
+              <span className="ml-auto bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemsCount}
+              </span>
+            )}
           </Link>
           <div className="px-4 py-3">
             <ThemeToggle />

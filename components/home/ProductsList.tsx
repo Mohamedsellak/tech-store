@@ -1,15 +1,45 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { FiShoppingCart, FiStar, FiHeart, FiArrowRight } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { getProductsByCategory } from "@/lib/products";
+import { addToCart, addToWishlist, isInWishlist } from "@/lib/cart";
 import Image from "next/image";
 
 // Featured products by category
 export default function ProductsList() {
+  const [wishlistState, setWishlistState] = useState<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    // Initialize wishlist state
+    const initialWishlistState: { [key: string]: boolean } = {};
+    Object.values(productsByCategory).flat().forEach(product => {
+      initialWishlistState[product.id.toString()] = isInWishlist(product.id.toString());
+    });
+    setWishlistState(initialWishlistState);
+  }, []);
+
+  const handleAddToCart = (product: any) => {
+    addToCart(product, 1);
+    // You could add a toast notification here
+  };
+
+  const handleToggleWishlist = (product: any) => {
+    const productIdStr = product.id.toString();
+    if (wishlistState[productIdStr]) {
+      // Remove from wishlist would need a removeFromWishlist function
+      // For now, just toggle the state
+      setWishlistState(prev => ({ ...prev, [productIdStr]: false }));
+    } else {
+      addToWishlist(product);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: true }));
+    }
+  };
+
   // Group products by category for display
   const productsByCategory = {
     smartphones: getProductsByCategory("Smartphones").slice(0, 4),
@@ -226,10 +256,22 @@ export default function ProductsList() {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
-                          className="w-8 xs:w-7 sm:w-8 h-8 xs:h-7 sm:h-8 bg-white/95 dark:bg-gray-700/95 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50 transition-all duration-200 group/heart"
-                          aria-label="Ajouter aux favoris"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleWishlist(product);
+                          }}
+                          className={`w-8 xs:w-7 sm:w-8 h-8 xs:h-7 sm:h-8 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border transition-all duration-200 ${
+                            wishlistState[product.id.toString()]
+                              ? 'bg-red-50 border-red-200 dark:bg-red-900/30 dark:border-red-400/50'
+                              : 'bg-white/95 dark:bg-gray-700/95 border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50'
+                          }`}
+                          aria-label={wishlistState[product.id.toString()] ? "Retirer des favoris" : "Ajouter aux favoris"}
                         >
-                          <FiHeart className="w-4 xs:w-3.5 sm:w-4 h-4 xs:h-3.5 sm:h-4 text-gray-600 dark:text-gray-300 group-hover/heart:text-red-500 dark:group-hover/heart:text-red-400 transition-colors duration-200" />
+                          <FiHeart className={`w-4 xs:w-3.5 sm:w-4 h-4 xs:h-3.5 sm:h-4 transition-colors duration-200 ${
+                            wishlistState[product.id.toString()]
+                              ? 'text-red-500 fill-red-500 dark:text-red-400 dark:fill-red-400'
+                              : 'text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400'
+                          }`} />
                         </motion.button>
                       </div>
                       
@@ -251,6 +293,8 @@ export default function ProductsList() {
                           <Image
                             src={product.image}
                             alt={product.name}
+                            width={400}
+                            height={400}
                             className="w-full h-full object-contain"
                           />
                           {/* Drop shadow effect */}
@@ -258,6 +302,8 @@ export default function ProductsList() {
                             <Image
                               src={product.image}
                               alt=""
+                              width={400}
+                              height={400}
                               className="w-full h-full object-contain"
                             />
                           </div>
@@ -301,7 +347,15 @@ export default function ProductsList() {
                           </div>
                           
                           <div className="flex items-center justify-end space-x-2 xs:space-x-1.5 shrink-0">
-                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-8 w-8 xs:h-6 xs:w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20 rounded-lg xs:rounded-lg">
+                            <Button 
+                              size="sm" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(product);
+                              }}
+                              disabled={!product.inStock}
+                              className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-8 w-8 xs:h-6 xs:w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20 rounded-lg xs:rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            >
                               <FiShoppingCart className="w-4 xs:w-2.5 sm:w-3 md:w-3.5 h-4 xs:h-2.5 sm:h-3 md:h-3.5" />
                             </Button>
                             {!product.inStock && (

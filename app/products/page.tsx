@@ -11,8 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { allProducts, categories, brands, type Product } from "@/lib/products";
+import { addToCart, addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/cart";
 import Image from "next/image";
 
 export default function ProductsPage() {
@@ -23,6 +24,32 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [wishlistState, setWishlistState] = useState<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    // Initialize wishlist state
+    const initialWishlistState: { [key: string]: boolean } = {};
+    allProducts.forEach(product => {
+      initialWishlistState[product.id.toString()] = isInWishlist(product.id.toString());
+    });
+    setWishlistState(initialWishlistState);
+  }, []);
+
+  const handleAddToCart = (product: Product) => {
+    addToCart(product, 1);
+    // You could add a toast notification here
+  };
+
+  const handleToggleWishlist = (product: Product) => {
+    const productIdStr = product.id.toString();
+    if (wishlistState[productIdStr]) {
+      removeFromWishlist(productIdStr);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: false }));
+    } else {
+      addToWishlist(product);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: true }));
+    }
+  };
 
   // Filter products
   const filteredProducts = allProducts.filter(product => {
@@ -278,6 +305,8 @@ export default function ProductsPage() {
                           <Image
                             src={product.image}
                             alt={product.name}
+                            width={400}
+                            height={400}
                             className="w-full h-full object-contain"
                           />
                         </motion.div>
@@ -323,12 +352,21 @@ export default function ProductsPage() {
                           <Button
                             size="icon"
                             variant="secondary"
-                            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 rounded-2xl shadow-lg"
+                            className={`backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 rounded-2xl shadow-lg transition-all duration-200 ${
+                              wishlistState[product.id.toString()]
+                                ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-400/50'
+                                : 'bg-white/80 dark:bg-gray-800/80'
+                            }`}
                             onClick={(e) => {
                               e.stopPropagation();
+                              handleToggleWishlist(product);
                             }}
                           >
-                            <FiHeart className="w-4 h-4" />
+                            <FiHeart className={`w-4 h-4 transition-colors duration-200 ${
+                              wishlistState[product.id.toString()]
+                                ? 'text-red-500 fill-red-500 dark:text-red-400 dark:fill-red-400'
+                                : 'text-gray-600 dark:text-gray-300'
+                            }`} />
                           </Button>
                         </motion.div>
 
@@ -401,6 +439,9 @@ export default function ProductsPage() {
                         disabled={!product.inStock}
                         onClick={(e) => {
                           e.stopPropagation();
+                          if (product.inStock) {
+                            handleAddToCart(product);
+                          }
                         }}
                       >
                         <FiShoppingCart className="w-5 h-5 mr-2" />
@@ -458,6 +499,27 @@ export default function ProductsPage() {
 
 // Enhanced Product Modal Component
 function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
+  const [isProductInWishlist, setIsProductInWishlist] = useState(false);
+
+  useEffect(() => {
+    setIsProductInWishlist(isInWishlist(product.id.toString()));
+  }, [product.id]);
+
+  const handleAddToCart = () => {
+    addToCart(product, 1);
+    // You could add a toast notification here
+  };
+
+  const handleToggleWishlist = () => {
+    const productIdStr = product.id.toString();
+    if (isProductInWishlist) {
+      removeFromWishlist(productIdStr);
+      setIsProductInWishlist(false);
+    } else {
+      addToWishlist(product);
+      setIsProductInWishlist(true);
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
       <motion.div
@@ -503,6 +565,8 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   <Image
                     src={product.image}
                     alt={product.name}
+                    width={600}
+                    height={600}
                     className="w-full h-full object-contain"
                   />
                 </motion.div>
@@ -534,6 +598,8 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                     <Image
                       src={product.image}
                       alt={product.name}
+                      width={80}
+                      height={80}
                       className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-300"
                     />
                   </motion.div>
@@ -647,21 +713,21 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
 
               {/* Action Buttons */}
               <div className="flex space-x-4 pt-6">
-                <Link href={`/checkout?product=${product.id}`} className="flex-1">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <motion.div
+                  className="flex-1"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button 
+                    size="lg" 
+                    onClick={handleAddToCart}
+                    className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300" 
+                    disabled={!product.inStock}
                   >
-                    <Button 
-                      size="lg" 
-                      className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300" 
-                      disabled={!product.inStock}
-                    >
-                      <FiShoppingCart className="w-5 h-5 mr-3" />
-                      {product.inStock ? "Acheter Maintenant" : "Produit Indisponible"}
-                    </Button>
-                  </motion.div>
-                </Link>
+                    <FiShoppingCart className="w-5 h-5 mr-3" />
+                    {product.inStock ? "Ajouter au Panier" : "Produit Indisponible"}
+                  </Button>
+                </motion.div>
                 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -670,11 +736,36 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   <Button 
                     size="lg" 
                     variant="outline"
-                    className="h-14 px-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl shadow-lg"
+                    onClick={handleToggleWishlist}
+                    className={`h-14 px-6 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl shadow-lg transition-all duration-200 ${
+                      isProductInWishlist
+                        ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-400/50'
+                        : 'bg-white dark:bg-gray-800'
+                    }`}
                   >
-                    <FiHeart className="w-5 h-5" />
+                    <FiHeart className={`w-5 h-5 transition-colors duration-200 ${
+                      isProductInWishlist
+                        ? 'text-red-500 fill-red-500 dark:text-red-400 dark:fill-red-400'
+                        : 'text-gray-600 dark:text-gray-300'
+                    }`} />
                   </Button>
                 </motion.div>
+                
+                <Link href={`/checkout?product=${product.id}`}>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      size="lg" 
+                      variant="outline"
+                      className="h-14 px-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl shadow-lg"
+                      disabled={!product.inStock}
+                    >
+                      Acheter
+                    </Button>
+                  </motion.div>
+                </Link>
               </div>
 
               {/* Trust Indicators */}

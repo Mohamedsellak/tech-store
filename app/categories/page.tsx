@@ -8,8 +8,10 @@ import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/c
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { categories as productCategories, getProductsByCategory, getFeaturedProducts } from "@/lib/products";
+import { addToCart, addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/cart";
 import Image from "next/image";
 
 // Interface for category structure
@@ -64,6 +66,33 @@ const getCategoryBrands = (categoryValue: string) => {
 
 export default function CategoriesPage() {
   const [filter, setFilter] = useState<'all' | 'featured'>('all');
+  const [wishlistState, setWishlistState] = useState<{ [key: string]: boolean }>({});
+  const router = useRouter();
+
+  useEffect(() => {
+    // Initialize wishlist state for featured products
+    const initialWishlistState: { [key: string]: boolean } = {};
+    getFeaturedProducts().forEach(product => {
+      initialWishlistState[product.id.toString()] = isInWishlist(product.id.toString());
+    });
+    setWishlistState(initialWishlistState);
+  }, []);
+
+  const handleAddToCart = (product: any) => {
+    addToCart(product, 1);
+    // You could add a toast notification here
+  };
+
+  const handleToggleWishlist = (product: any) => {
+    const productIdStr = product.id.toString();
+    if (wishlistState[productIdStr]) {
+      removeFromWishlist(productIdStr);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: false }));
+    } else {
+      addToWishlist(product);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: true }));
+    }
+  };
 
   // Build categories from actual product data
   const categories = productCategories
@@ -153,9 +182,9 @@ export default function CategoriesPage() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
               className="group cursor-pointer"
+              onClick={() => router.push(`/products?category=${category.value}`)}
             >
-              <Link href={`/products?category=${category.value}`}>
-                <Card className="h-full text-center hover:shadow-2xl transition-all duration-500 border-0 shadow-lg bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden relative">
+              <Card className="h-full text-center hover:shadow-2xl transition-all duration-500 border-0 shadow-lg bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden relative">
                 {/* Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 
@@ -210,16 +239,20 @@ export default function CategoriesPage() {
                     initial={{ x: -10 }}
                     whileHover={{ x: 0 }}
                   >
-                    <Link href={`/products?category=${category.value}`}>
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl">
-                        Explorer
-                        <FiArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        router.push(`/products?category=${category.value}`);
+                      }}
+                    >
+                      Explorer
+                      <FiArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </motion.div>
                 </CardContent>
               </Card>
-              </Link>
             </motion.div>
           ))}
         </div>
@@ -301,10 +334,22 @@ export default function CategoriesPage() {
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        className="w-8 h-8 bg-white/95 dark:bg-gray-700/95 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50 transition-all duration-200 group/heart"
-                        aria-label="Ajouter aux favoris"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleWishlist(product);
+                        }}
+                        className={`w-8 h-8 backdrop-blur-sm shadow-lg rounded-full flex items-center justify-center border transition-all duration-200 ${
+                          wishlistState[product.id.toString()]
+                            ? 'bg-red-50 border-red-200 dark:bg-red-900/30 dark:border-red-400/50'
+                            : 'bg-white/95 dark:bg-gray-700/95 border-gray-200/60 dark:border-gray-600/60 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:border-red-400/50'
+                        }`}
+                        aria-label={wishlistState[product.id.toString()] ? "Retirer des favoris" : "Ajouter aux favoris"}
                       >
-                        <FiHeart className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover/heart:text-red-500 dark:group-hover/heart:text-red-400 transition-colors duration-200" />
+                        <FiHeart className={`w-4 h-4 transition-colors duration-200 ${
+                          wishlistState[product.id.toString()]
+                            ? 'text-red-500 fill-red-500 dark:text-red-400 dark:fill-red-400'
+                            : 'text-gray-600 dark:text-gray-300'
+                        }`} />
                       </motion.button>
                     </div>
                     
@@ -326,6 +371,8 @@ export default function CategoriesPage() {
                         <Image
                           src={product.image}
                           alt={product.name}
+                          width={400}
+                          height={400}
                           className="w-full h-full object-contain"
                         />
                         {/* Drop shadow effect */}
@@ -333,6 +380,8 @@ export default function CategoriesPage() {
                           <Image
                             src={product.image}
                             alt=""
+                            width={400}
+                            height={400}
                             className="w-full h-full object-contain"
                           />
                         </div>
@@ -376,7 +425,15 @@ export default function CategoriesPage() {
                         </div>
                         
                         <div className="flex items-center space-x-1 sm:space-x-2">
-                          <Button size="sm" className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20">
+                          <Button 
+                            size="sm" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(product);
+                            }}
+                            disabled={!product.inStock}
+                            className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white border-0 h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 p-0 shadow-md hover:shadow-lg dark:shadow-blue-900/20 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                          >
                             <FiShoppingCart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
                           </Button>
                           {!product.inStock && (
