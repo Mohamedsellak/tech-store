@@ -16,7 +16,7 @@ import {
   getCartTotal, 
   getCartItemsCount,
   clearCart,
-  addToWishlist,
+  addCartItemToWishlist,
   CartItem 
 } from "@/lib/cart";
 
@@ -40,7 +40,7 @@ export default function PanierPage() {
   };
 
   const handleMoveToWishlist = (item: CartItem) => {
-    addToWishlist(item);
+    addCartItemToWishlist(item);
     removeFromCart(item.id);
     setCartItems(getCart());
   };
@@ -121,13 +121,13 @@ export default function PanierPage() {
                 <p className="text-gray-600 dark:text-gray-300 mb-8">
                   Découvrez nos produits technologiques exceptionnels et ajoutez-les à votre panier
                 </p>
-                <div className="space-y-4">
-                  <Link href="/products">
+                <div className="space-y-2">
+                  <Link href="/products" className="block">
                     <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl">
                       Découvrir nos produits
                     </Button>
                   </Link>
-                  <Link href="/favoris">
+                  <Link href="/favoris" className="block">
                     <Button variant="outline" className="w-full rounded-2xl">
                       <FiHeart className="w-4 h-4 mr-2" />
                       Voir mes favoris

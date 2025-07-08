@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShoppingCart, FiStar, FiHeart,FiArrowRight } from "react-icons/fi";
+import { FiShoppingCart, FiHeart, FiArrowRight, FiStar } from "react-icons/fi";
 import { AiOutlineMobile } from "react-icons/ai";
 import { BsHeadphones, BsSmartwatch, BsCpu, BsController, BsCamera, BsKeyboard } from "react-icons/bs";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { categories as productCategories, getProductsByCategory, getFeaturedProducts } from "@/lib/products";
+import { categories as productCategories, getProductsByCategory, getFeaturedProducts, Product } from "@/lib/products";
 import { addToCart, addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/cart";
 import Image from "next/image";
 
@@ -78,12 +78,12 @@ export default function CategoriesPage() {
     setWishlistState(initialWishlistState);
   }, []);
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
     // You could add a toast notification here
   };
 
-  const handleToggleWishlist = (product: any) => {
+  const handleToggleWishlist = (product: Product) => {
     const productIdStr = product.id.toString();
     if (wishlistState[productIdStr]) {
       removeFromWishlist(productIdStr);
@@ -478,7 +478,7 @@ export default function CategoriesPage() {
                   </Button>
                 </Link>
                 <Link href="/products">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-xl">
+                  <Button size="lg" variant="outline" className="border-white text-blue-600 hover:bg-white/10 hover:text-white rounded-xl">
                     Voir Tous les Produits
                   </Button>
                 </Link>

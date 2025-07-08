@@ -11,7 +11,7 @@ import Image from "next/image";
 import { 
   getWishlist, 
   removeFromWishlist, 
-  addToCart,
+  addWishlistItemToCart,
   WishlistItem 
 } from "@/lib/cart";
 
@@ -30,7 +30,7 @@ export default function FavorisPage() {
   };
 
   const handleAddToCart = (item: WishlistItem) => {
-    addToCart(item, 1);
+    addWishlistItemToCart(item, 1);
     // Optionally remove from wishlist when added to cart
     // removeFromWishlist(item.id);
     // setWishlistItems(getWishlist());
@@ -100,13 +100,13 @@ export default function FavorisPage() {
                 <p className="text-gray-600 dark:text-gray-300 mb-8">
                   Explorez nos produits et ajoutez vos coups de cœur à vos favoris pour les retrouver facilement
                 </p>
-                <div className="space-y-4">
-                  <Link href="/products">
+                <div className="space-y-2">
+                  <Link href="/products" className="block">
                     <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl">
                       Découvrir nos produits
                     </Button>
                   </Link>
-                  <Link href="/categories">
+                  <Link href="/categories" className="block">
                     <Button variant="outline" className="w-full rounded-2xl">
                       Parcourir par catégories
                     </Button>
@@ -277,7 +277,7 @@ export default function FavorisPage() {
                     Tout ajouter au panier
                   </Button>
                   <Link href="/panier">
-                    <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-xl">
+                    <Button size="lg" variant="outline" className="border-white text-blue-600 hover:bg-white/10 hover:text-white rounded-xl">
                       Voir mon panier
                     </Button>
                   </Link>

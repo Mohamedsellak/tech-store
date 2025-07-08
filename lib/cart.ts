@@ -39,7 +39,9 @@ export const getCart = (): CartItem[] => {
   return cart;
 };
 
-export const addToCart = (product: any, quantity: number = 1): void => {
+import { Product } from './products';
+
+export const addToCart = (product: Product, quantity: number = 1): void => {
   const productId = product.id.toString();
   const existingItem = cart.find(item => item.id === productId);
   
@@ -111,7 +113,7 @@ export const getWishlist = (): WishlistItem[] => {
   return wishlist;
 };
 
-export const addToWishlist = (product: any): void => {
+export const addToWishlist = (product: Product): void => {
   const productId = product.id.toString();
   const existingItem = wishlist.find(item => item.id === productId);
   
@@ -149,4 +151,52 @@ export const isInWishlist = (productId: string): boolean => {
 
 export const getWishlistItemsCount = (): number => {
   return wishlist.length;
+};
+
+export const addWishlistItemToCart = (item: WishlistItem, quantity: number = 1): void => {
+  const existingItem = cart.find(cartItem => cartItem.id === item.id);
+  
+  if (existingItem) {
+    existingItem.quantity += quantity;
+  } else {
+    cart.push({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      originalPrice: item.originalPrice,
+      image: item.image,
+      category: item.category,
+      brand: item.brand,
+      quantity,
+      inStock: item.inStock
+    });
+  }
+  
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('tech-store-cart', JSON.stringify(cart));
+  }
+};
+
+export const addCartItemToWishlist = (item: CartItem): void => {
+  const existingItem = wishlist.find(wishlistItem => wishlistItem.id === item.id);
+  
+  if (!existingItem) {
+    wishlist.push({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      originalPrice: item.originalPrice,
+      image: item.image,
+      category: item.category,
+      brand: item.brand,
+      rating: 4.5, // Default rating for cart items
+      isNew: false, // Default value
+      inStock: item.inStock,
+      description: `${item.brand} ${item.name}` // Generated description
+    });
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tech-store-wishlist', JSON.stringify(wishlist));
+    }
+  }
 };

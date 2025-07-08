@@ -1,18 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FiShoppingCart, FiStar, FiHeart, FiArrowRight } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { getProductsByCategory } from "@/lib/products";
-import { addToCart, addToWishlist, isInWishlist } from "@/lib/cart";
+import { getProductsByCategory, Product } from "@/lib/products";
+import { addToCart, addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/cart";
 import Image from "next/image";
 
 // Featured products by category
 export default function ProductsList() {
   const [wishlistState, setWishlistState] = useState<{ [key: string]: boolean }>({});
+
+  const handleAddToCart = (product: Product) => {
+    addToCart(product, 1);
+    // You could add a toast notification here
+  };
+
+  const handleToggleWishlist = (product: Product) => {
+    const productIdStr = product.id.toString();
+    if (wishlistState[productIdStr]) {
+      // Remove from wishlist
+      removeFromWishlist(productIdStr);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: false }));
+    } else {
+      // Add to wishlist
+      addToWishlist(product);
+      setWishlistState(prev => ({ ...prev, [productIdStr]: true }));
+    }
+  };
+
+  // Group products by category for display
+  const productsByCategory = useMemo(() => ({
+    smartphones: getProductsByCategory("Smartphones").slice(0, 4),
+    audio: getProductsByCategory("Audio").slice(0, 4),
+    gaming: getProductsByCategory("Gaming").slice(0, 4),
+    smartwatches: getProductsByCategory("Smartwatches").slice(0, 4),
+  }), []);
 
   useEffect(() => {
     // Initialize wishlist state
@@ -21,32 +47,7 @@ export default function ProductsList() {
       initialWishlistState[product.id.toString()] = isInWishlist(product.id.toString());
     });
     setWishlistState(initialWishlistState);
-  }, []);
-
-  const handleAddToCart = (product: any) => {
-    addToCart(product, 1);
-    // You could add a toast notification here
-  };
-
-  const handleToggleWishlist = (product: any) => {
-    const productIdStr = product.id.toString();
-    if (wishlistState[productIdStr]) {
-      // Remove from wishlist would need a removeFromWishlist function
-      // For now, just toggle the state
-      setWishlistState(prev => ({ ...prev, [productIdStr]: false }));
-    } else {
-      addToWishlist(product);
-      setWishlistState(prev => ({ ...prev, [productIdStr]: true }));
-    }
-  };
-
-  // Group products by category for display
-  const productsByCategory = {
-    smartphones: getProductsByCategory("Smartphones").slice(0, 4),
-    audio: getProductsByCategory("Audio").slice(0, 4),
-    gaming: getProductsByCategory("Gaming").slice(0, 4),
-    smartwatches: getProductsByCategory("Smartwatches").slice(0, 4),
-  };
+  }, [productsByCategory]);
 
   const categoryDisplayNames = {
     smartphones: "Smartphones",

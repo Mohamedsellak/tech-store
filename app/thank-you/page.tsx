@@ -9,6 +9,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { CartItem } from "@/lib/cart";
+
+interface OrderData {
+  items: CartItem[];
+  total: number;
+  shippingCost: number;
+  customerInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+  paymentMethod: string;
+  orderDate: string;
+}
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -16,7 +35,7 @@ function ThankYouContent() {
   const orderParam = searchParams.get('order');
   
   const [orderNumber, setOrderNumber] = useState<string>('');
-  const [orderData, setOrderData] = useState<any>(null);
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
 
   useEffect(() => {
     if (!orderParam) {
@@ -206,9 +225,9 @@ function ThankYouContent() {
                         Informations client
                       </h3>
                       <div className="space-y-2 text-sm">
-                        <p><span className="font-medium">Nom:</span> {orderData.customer?.name}</p>
-                        <p><span className="font-medium">Email:</span> {orderData.customer?.email}</p>
-                        <p><span className="font-medium">Téléphone:</span> {orderData.customer?.phone}</p>
+                        <p><span className="font-medium">Nom:</span> {orderData.customerInfo?.firstName} {orderData.customerInfo?.lastName}</p>
+                        <p><span className="font-medium">Email:</span> {orderData.customerInfo?.email}</p>
+                        <p><span className="font-medium">Téléphone:</span> {orderData.customerInfo?.phone}</p>
                       </div>
                     </div>
 
@@ -218,9 +237,9 @@ function ThankYouContent() {
                         Adresse de livraison
                       </h3>
                       <div className="space-y-1 text-sm">
-                        <p>{orderData.shipping?.address}</p>
-                        <p>{orderData.shipping?.city} {orderData.shipping?.postalCode}</p>
-                        <p>{orderData.shipping?.country}</p>
+                        <p>{orderData.customerInfo?.address}</p>
+                        <p>{orderData.customerInfo?.city} {orderData.customerInfo?.postalCode}</p>
+                        <p>{orderData.customerInfo?.country}</p>
                       </div>
                     </div>
                   </div>
@@ -231,7 +250,7 @@ function ThankYouContent() {
                       Articles commandés
                     </h3>
                     <div className="space-y-3">
-                      {orderData.items?.map((item: any, index: number) => (
+                      {orderData.items?.map((item: CartItem, index: number) => (
                         <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                           <div className="relative w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                             <Image
@@ -267,7 +286,7 @@ function ThankYouContent() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Mode de paiement: {orderData.payment === 'cash' ? 'Paiement à la livraison' : 'Carte bancaire'}
+                        Mode de paiement: {orderData.paymentMethod === 'cash' ? 'Paiement à la livraison' : 'Carte bancaire'}
                       </p>
                     </div>
                   </div>

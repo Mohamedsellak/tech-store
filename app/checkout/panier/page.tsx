@@ -12,13 +12,13 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getCart, clearCart, getCartTotal, getCartItemsCount } from "@/lib/cart";
-import { villes,Ville} from "@/lib/villes";
+import { getCart, clearCart, getCartTotal, getCartItemsCount, CartItem } from "@/lib/cart";
+import { villes} from "@/lib/villes";
 import Image from "next/image";
 
 export default function CartCheckoutPage() {
   const router = useRouter();
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(0);
 
@@ -468,7 +468,7 @@ export default function CartCheckoutPage() {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="expiryDate">Date d'expiration *</Label>
+                            <Label htmlFor="expiryDate">Date d&apos;expiration *</Label>
                             <Input
                               id="expiryDate"
                               value={formData.expiryDate}
@@ -539,7 +539,7 @@ export default function CartCheckoutPage() {
                 {/* Cart Items */}
                 <div className="space-y-3 max-h-64 overflow-y-auto">
                   {cartItems.map((item) => (
-                    <div key={`${item.id}-${item.color || 'default'}`} className="flex items-center space-x-3">
+                    <div key={`${item.id}-${item.brand || 'default'}`} className="flex items-center space-x-3">
                       <div className="relative w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                         <Image
                           src={item.image}
@@ -553,8 +553,8 @@ export default function CartCheckoutPage() {
                           {item.name}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {item.color && `Couleur: ${item.color}`}
-                          {item.color && ' • '}
+                          {item.brand && `Marque: ${item.brand}`}
+                          {item.brand && ' • '}
                           Qté: {item.quantity}
                         </p>
                       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShoppingCart, FiMapPin, FiUser, FiCheck, FiCreditCard } from "react-icons/fi";
+import { FiShoppingCart, FiMapPin, FiUser, FiCreditCard } from "react-icons/fi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -440,7 +440,7 @@ function CheckoutContent() {
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <Label htmlFor="expiryDate">Date d'expiration *</Label>
+                              <Label htmlFor="expiryDate">Date d&apos;expiration *</Label>
                               <Input
                                 id="expiryDate"
                                 value={formData.expiryDate}
